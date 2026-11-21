@@ -3,4 +3,10 @@
   "main": "worker.js",
   "compatibility_date": "2026-11-07",
   "workers_dev": true
+"kv_namespaces": [
+  {
+    "binding": "SESSIONS",
+    "id": "b9962ccf70f241658435c43b30ca5342"
+  }
+]
 }
