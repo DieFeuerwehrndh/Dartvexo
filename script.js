@@ -1262,39 +1262,21 @@ menueButton.addEventListener("click", menueOeffnen);
 menueSchliessen.addEventListener("click", menueSchliessenFunktion);
 menueHintergrund.addEventListener("click", menueSchliessenFunktion);
 
-// Menüeinträge
 document.querySelectorAll("[data-menue]").forEach(button => {
     button.addEventListener("click", () => {
         const ziel = button.dataset.menue;
 
+        if (ziel === "club") {
+            return;
+        }
+
         menueSchliessenFunktion();
 
-        if (ziel === "start") {
-            showMenu();
-        }
-
-        if (ziel === "tictactoe") {
-            openGame("tictactoe");
-        }
-
-        if (ziel === "x01") {
-            openGame("x01");
-        }
-
-        if (ziel === "checkout") {
-            openGame("checkout");
-        }
-
-        if (ziel === "stats") {
-            openGame("stats");
-        }
-
-        if (ziel === "club") {
-            document.getElementById("clubBereich").scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
-        }
+        if (ziel === "start") showMenu();
+        if (ziel === "tictactoe") openGame("tictactoe");
+        if (ziel === "x01") openGame("x01");
+        if (ziel === "checkout") openGame("checkout");
+        if (ziel === "stats") openGame("stats");
 
         if (ziel === "test") {
             alert("Der 30-Tage-Testzugang kommt bald!");
@@ -1302,7 +1284,6 @@ document.querySelectorAll("[data-menue]").forEach(button => {
     });
 });
 
-// Menü mit Escape schließen
 document.addEventListener("keydown", event => {
     if (event.key === "Escape" && !seitenMenue.hidden) {
         menueSchliessenFunktion();
