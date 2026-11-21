@@ -4,6 +4,7 @@ const FRONTEND_URL = "https://diefeuerwehrndh.github.io/Dartvexo/";
 const REDIRECT_URI =
     "https://dartvexo.niclasbehrens6.workers.dev/auth/patreon/callback";
 const CAMPAIGN_ID = "17093464";
+const CLUB_SESSION_TTL = 60 * 60 * 24 * 365;
 
 function corsHeaders(origin) {
     return {
@@ -171,7 +172,63 @@ export default {
                 }, headers, 502);
             }
         }
+// Vereinszugang aktivieren
+if (
+    request.method === "POST" &&
+    url.pathname === "/api/club/activate"
+) {
+    let body;
 
+    try {
+        body = await request.json();
+    } catch {
+        return json({
+            success: false,
+            error: "INVALID_JSON"
+        }, headers, 400);
+    }
+
+    if (!env.CLUB_ACTIVATION_CODE) {
+        return json({
+            success: false,
+            error: "CLUB_SECRET_MISSING"
+        }, headers, 500);
+    }
+
+    const submittedCode = String(body.code || "").trim();
+
+    if (!submittedCode || submittedCode !== env.CLUB_ACTIVATION_CODE) {
+        return json({
+            success: false,
+            error: "INVALID_CLUB_CODE"
+        }, headers, 401);
+    }
+
+    const sessionToken = randomToken();
+
+    await env.SESSIONS.put(
+        `session:${sessionToken}`,
+        JSON.stringify({
+            type: "club",
+            user: {
+                name: "Vereinszugang",
+                hasAccess: true
+            },
+            deviceName: String(body.deviceName || "Vereinsgerät").slice(0, 40)
+        }),
+        { expirationTtl: CLUB_SESSION_TTL }
+    );
+
+    return json({
+        success: true,
+        authenticated: true,
+        hasAccess: true,
+        sessionToken,
+        user: {
+            name: "Vereinszugang"
+        }
+    }, headers);
+}
         // Login bei Patreon starten
         if (
             request.method === "GET" &&
@@ -350,7 +407,23 @@ export default {
             }
 
             let data = JSON.parse(stored);
+// Vereinszugang prüfen
+if (data.type === "club") {
+    await env.SESSIONS.put(
+        sessionKey,
+        JSON.stringify(data),
+        { expirationTtl: CLUB_SESSION_TTL }
+    );
 
+    return json({
+        success: true,
+        authenticated: true,
+        hasAccess: true,
+        user: {
+            name: "Vereinszugang"
+        }
+    }, headers);
+}
             try {
                 if (Date.now() >= data.expiresAt) {
                     const refreshed = await exchangeToken(env, {
