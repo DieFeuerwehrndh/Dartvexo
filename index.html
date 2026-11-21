@@ -22,56 +22,140 @@
             <h1><span>Dart</span>Vexo</h1>
             <p>Dein persönlicher Dart-Hub</p>
         </div>
-        <div class="dart-symbol">🎯</div>
+        <div class="kopf-rechts">
+    <div class="dart-symbol">🎯</div>
+
+    <button
+        type="button"
+        id="menueButton"
+        class="menue-button"
+        aria-label="Menü öffnen"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+</div>
     </header>
 
+<div id="menueHintergrund" class="menue-hintergrund" hidden></div>
+
+<nav id="seitenMenue" class="seiten-menue" aria-label="Hauptmenü" hidden>
+    <div class="menue-kopf">
+        <h2>DartVexo</h2>
+
+        <button
+            type="button"
+            id="menueSchliessen"
+            class="menue-schliessen"
+            aria-label="Menü schließen"
+        >
+            ✕
+        </button>
+    </div>
+
+    <button type="button" class="menue-punkt" data-menue="start">
+        Startseite
+    </button>
+
+    <button type="button" class="menue-punkt" data-menue="tictactoe">
+        Dart Tic-Tac-Toe
+    </button>
+
+    <button type="button" class="menue-punkt" data-menue="x01">
+        501 / X01
+    </button>
+
+    <button type="button" class="menue-punkt" data-menue="checkout">
+        Checkout-Training
+    </button>
+
+    <button type="button" class="menue-punkt" data-menue="stats">
+        Statistiken
+    </button>
+
+    <hr>
+
+    <button type="button" class="menue-punkt" data-menue="club">
+        Vereinszugang
+            <button type="button" class="menue-punkt" data-menue="club">
+        Vereinszugang
+    </button>
+
+    <section class="info-karte" id="clubBereich">
+        <h2>Vereinszugang</h2>
+        <p>
+            Aktiviere DartVexo für dein Dartverein-Gerät.
+            Jedes Tablet benötigt eine einmalige Aktivierung.
+        </p>
+
+        <div id="clubAktivierung">
+            <label for="clubDeviceName">Gerätename</label>
+            <input
+                type="text"
+                id="clubDeviceName"
+                placeholder="z. B. Dartboard 1"
+                maxlength="40"
+            >
+
+            <label for="clubCode">Aktivierungscode</label>
+            <input
+                type="password"
+                id="clubCode"
+                placeholder="Vereinscode eingeben"
+                autocomplete="off"
+            >
+
+            <button type="button" id="clubAktivieren">
+                Vereinszugang aktivieren
+            </button>
+        </div>
+
+        <p id="clubStatus" aria-live="polite">
+            Noch kein Vereinsgerät aktiviert.
+        </p>
+
+        <button
+            type="button"
+            id="clubAbmelden"
+            hidden
+        >
+            Vereinsgerät abmelden
+        </button>
+    </section>
+
+    <a
+        class="menue-punkt menue-link"
+        href="https://dartvexo.niclasbehrens6.workers.dev/auth/patreon/login"
+    >
+        Patreon / Premium
+    </a>
+
+    <button type="button" class="menue-punkt" data-menue="test">
+        30-Tage-Testzugang
+        <span class="menue-hinweis">Kommt bald</span>
+    </button>
+    </button>
+
+    <a
+        class="menue-punkt menue-link"
+        href="https://dartvexo.niclasbehrens6.workers.dev/auth/patreon/login"
+    >
+        Patreon / Premium
+    </a>
+
+    <button type="button" class="menue-punkt" data-menue="test">
+        30-Tage-Testzugang
+        <span class="menue-hinweis">Kommt bald</span>
+    </button>
+</nav>
+    
     <main>
         <section class="begruesung">
             <h2>Willkommen zurück!</h2>
             <p>Worauf hast du heute Lust?</p>
         </section>
 
-<section class="info-karte" id="clubBereich">
-    <h2>Vereinszugang</h2>
-    <p>
-        Aktiviere DartVexo für dein Dartverein-Gerät.
-        Jedes Tablet benötigt eine einmalige Aktivierung.
-    </p>
 
-    <div id="clubAktivierung">
-        <label for="clubDeviceName">Gerätename</label>
-        <input
-            type="text"
-            id="clubDeviceName"
-            placeholder="z. B. Dartboard 1"
-            maxlength="40"
-        >
-
-        <label for="clubCode">Aktivierungscode</label>
-        <input
-            type="password"
-            id="clubCode"
-            placeholder="Vereinscode eingeben"
-            autocomplete="off"
-        >
-
-        <button type="button" id="clubAktivieren">
-            Vereinszugang aktivieren
-        </button>
-    </div>
-
-    <p id="clubStatus" aria-live="polite">
-        Noch kein Vereinsgerät aktiviert.
-    </p>
-
-    <button
-        type="button"
-        id="clubAbmelden"
-        hidden
-    >
-        Vereinsgerät abmelden
-    </button>
-</section>
 
         <section class="spielbereich">
             <h2>Spielmodus auswählen</h2>
