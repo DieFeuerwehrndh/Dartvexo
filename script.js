@@ -1236,3 +1236,75 @@ if (clubAbmelden) {
 
 // Beim Öffnen der App automatisch prüfen
 clubSitzungPruefen();
+
+/* ==========================================
+   DARTVEXO – HAMBURGER-MENÜ
+   ========================================== */
+
+const menueButton = document.getElementById("menueButton");
+const menueSchliessen = document.getElementById("menueSchliessen");
+const seitenMenue = document.getElementById("seitenMenue");
+const menueHintergrund = document.getElementById("menueHintergrund");
+
+function menueOeffnen() {
+    seitenMenue.hidden = false;
+    menueHintergrund.hidden = false;
+    menueButton.setAttribute("aria-expanded", "true");
+}
+
+function menueSchliessenFunktion() {
+    seitenMenue.hidden = true;
+    menueHintergrund.hidden = true;
+    menueButton.setAttribute("aria-expanded", "false");
+}
+
+menueButton.addEventListener("click", menueOeffnen);
+menueSchliessen.addEventListener("click", menueSchliessenFunktion);
+menueHintergrund.addEventListener("click", menueSchliessenFunktion);
+
+// Menüeinträge
+document.querySelectorAll("[data-menue]").forEach(button => {
+    button.addEventListener("click", () => {
+        const ziel = button.dataset.menue;
+
+        menueSchliessenFunktion();
+
+        if (ziel === "start") {
+            showMenu();
+        }
+
+        if (ziel === "tictactoe") {
+            openGame("tictactoe");
+        }
+
+        if (ziel === "x01") {
+            openGame("x01");
+        }
+
+        if (ziel === "checkout") {
+            openGame("checkout");
+        }
+
+        if (ziel === "stats") {
+            openGame("stats");
+        }
+
+        if (ziel === "club") {
+            document.getElementById("clubBereich").scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
+
+        if (ziel === "test") {
+            alert("Der 30-Tage-Testzugang kommt bald!");
+        }
+    });
+});
+
+// Menü mit Escape schließen
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !seitenMenue.hidden) {
+        menueSchliessenFunktion();
+    }
+});
