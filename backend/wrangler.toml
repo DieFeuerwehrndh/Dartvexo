@@ -4,7 +4,7 @@ compatibility_date = "2026-11-07"
 workers_dev = true
 
 [vars]
-PATREON_CLIENT_ID = "MkEhZyNLx4Ucb8Ybf6u5ypHg9GWslKbwMmW9rvnDSb8lPx8DNDUA0iIs"
+PATREON_CLIENT_ID = "MkEhZyNLx4Ucb8Ybf6u5ypHg9GWslKbwMmW9rvnDSb8lPx8DNDUA0iIs-YtHMJhB"
 
 [[kv_namespaces]]
 binding = "SESSIONS"
