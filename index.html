@@ -392,6 +392,159 @@
     <script src="script.js"></script>
     
 <script>
+/* ==========================================
+   DARTVEXO – VEREINSZUGANG
+   ========================================== */
+
+const CLUB_API = "https://dartvexo.niclasbehrens6.workers.dev";
+const CLUB_SESSION_KEY = "dartvexo_club_session";
+
+const clubCode = document.getElementById("clubCode");
+const clubDeviceName = document.getElementById("clubDeviceName");
+const clubAktivieren = document.getElementById("clubAktivieren");
+const clubStatus = document.getElementById("clubStatus");
+const clubAbmelden = document.getElementById("clubAbmelden");
+const clubAktivierung = document.getElementById("clubAktivierung");
+
+function clubAnzeigeAktualisieren(aktiv) {
+    if (clubAktivierung) {
+        clubAktivierung.hidden = aktiv;
+    }
+
+    if (clubAbmelden) {
+        clubAbmelden.hidden = !aktiv;
+    }
+
+    if (clubStatus) {
+        clubStatus.textContent = aktiv
+            ? "Vereinszugang ist aktiv."
+            : "Noch kein Vereinsgerät aktiviert.";
+    }
+}
+
+// Vorhandene Sitzung überprüfen
+async function clubSitzungPruefen() {
+    const token = localStorage.getItem(CLUB_SESSION_KEY);
+
+    if (!token) {
+        clubAnzeigeAktualisieren(false);
+        return;
+    }
+
+    try {
+        const antwort = await fetch(
+            CLUB_API + "/api/auth/status",
+            {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        const daten = await antwort.json();
+
+        if (daten.authenticated && daten.hasAccess) {
+            clubAnzeigeAktualisieren(true);
+        } else {
+            localStorage.removeItem(CLUB_SESSION_KEY);
+            clubAnzeigeAktualisieren(false);
+        }
+    } catch (fehler) {
+        clubStatus.textContent =
+            "Verbindung zum Server fehlgeschlagen.";
+    }
+}
+
+// Vereinsgerät aktivieren
+if (clubAktivieren) {
+    clubAktivieren.addEventListener("click", async function () {
+        const code = clubCode.value.trim();
+        const deviceName =
+            clubDeviceName.value.trim() || "Vereinsgerät";
+
+        if (!code) {
+            clubStatus.textContent =
+                "Bitte gib den Aktivierungscode ein.";
+            return;
+        }
+
+        clubAktivieren.disabled = true;
+        clubStatus.textContent =
+            "Aktivierung wird überprüft ...";
+
+        try {
+            const antwort = await fetch(
+                CLUB_API + "/api/club/activate",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        deviceName: deviceName
+                    })
+                }
+            );
+
+            const daten = await antwort.json();
+
+            if (!antwort.ok || !daten.success) {
+                clubStatus.textContent =
+                    daten.error === "INVALID_CLUB_CODE"
+                        ? "Der Aktivierungscode ist falsch."
+                        : "Aktivierung fehlgeschlagen.";
+                return;
+            }
+
+            localStorage.setItem(
+                CLUB_SESSION_KEY,
+                daten.sessionToken
+            );
+
+            clubCode.value = "";
+            clubAnzeigeAktualisieren(true);
+
+        } catch (fehler) {
+            clubStatus.textContent =
+                "Server nicht erreichbar. Bitte erneut versuchen.";
+        } finally {
+            clubAktivieren.disabled = false;
+        }
+    });
+}
+
+// Vereinsgerät abmelden
+if (clubAbmelden) {
+    clubAbmelden.addEventListener("click", async function () {
+        const token = localStorage.getItem(CLUB_SESSION_KEY);
+
+        try {
+            if (token) {
+                await fetch(
+                    CLUB_API + "/api/auth/logout",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        }
+                    }
+                );
+            }
+        } catch (fehler) {
+            console.warn("Abmeldung beim Server fehlgeschlagen.");
+        }
+
+        localStorage.removeItem(CLUB_SESSION_KEY);
+        clubAnzeigeAktualisieren(false);
+    });
+}
+
+// Beim Öffnen der App automatisch prüfen
+clubSitzungPruefen();
+</script>
+
+<script>
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("./service-worker.js")
