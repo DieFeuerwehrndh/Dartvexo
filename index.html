@@ -639,6 +639,59 @@ clubSitzungPruefen();
     });
   }
 </script>
+
+<script>
+/* DARTVEXO – HAMBURGER-MENÜ */
+
+const dvMenuBtn = document.getElementById("menueButton");
+const dvMenuClose = document.getElementById("menueSchliessen");
+const dvMenu = document.getElementById("seitenMenue");
+const dvMenuBg = document.getElementById("menueHintergrund");
+
+function dvMenuOpen() {
+    dvMenu.hidden = false;
+    dvMenuBg.hidden = false;
+    dvMenuBtn.setAttribute("aria-expanded", "true");
+}
+
+function dvMenuCloseNow() {
+    dvMenu.hidden = true;
+    dvMenuBg.hidden = true;
+    dvMenuBtn.setAttribute("aria-expanded", "false");
+}
+
+dvMenuBtn.addEventListener("click", dvMenuOpen);
+dvMenuClose.addEventListener("click", dvMenuCloseNow);
+dvMenuBg.addEventListener("click", dvMenuCloseNow);
+
+document.querySelectorAll("#seitenMenue [data-menue]").forEach(button => {
+    button.addEventListener("click", () => {
+        const ziel = button.dataset.menue;
+
+        if (ziel === "club") {
+            return;
+        }
+
+        dvMenuCloseNow();
+
+        if (ziel === "start") showMenu();
+        if (ziel === "tictactoe") openGame("tictactoe");
+        if (ziel === "x01") openGame("x01");
+        if (ziel === "checkout") openGame("checkout");
+        if (ziel === "stats") openGame("stats");
+
+        if (ziel === "test") {
+            alert("Der 30-Tage-Testzugang kommt bald!");
+        }
+    });
+});
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !dvMenu.hidden) {
+        dvMenuCloseNow();
+    }
+});
+</script>
     
 </body>
 </html>
