@@ -2,10 +2,5 @@
   "name": "dartvexo",
   "main": "worker.js",
   "compatibility_date": "2026-11-07",
-  "workers_dev": true,
-  "secrets": {
-    "required": [
-      "PATREON_CAT"
-    ]
-  }
+  "workers_dev": true
 }
