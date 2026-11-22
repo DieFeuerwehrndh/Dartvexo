@@ -665,58 +665,48 @@ spielbereich-neu button {
 }
 
 
+
 /* ==========================================
-   DARTVEXO – NEUES STARTMENÜ
+   DARTVEXO – STARTMENÜ-KARTEN
    ========================================== */
 
-/* Startmenü-Buttons */
-#startAnsicht button {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 10px;
+#spieleOeffnen,
+#einstellungenOeffnen,
+#zugangscodeOeffnen {
+    background: #243442 !important;
+    color: #f4f7fa !important;
 
-    width: 100%;
-    min-height: 130px;
-    padding: 22px;
+    border: 1px solid #344757 !important;
+    border-radius: 16px !important;
 
-    background: var(--karte);
-    color: var(--text);
+    padding: 22px !important;
+    min-height: 190px;
 
-    border: 1px solid #344757;
-    border-radius: 16px;
-
-    font-size: 18px;
-    font-weight: bold;
     text-align: left;
-
     cursor: pointer;
 
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease;
+    transition: all 0.2s ease;
 }
 
-/* Beim Darüberfahren */
-#startAnsicht button:hover {
-    background: var(--karte-hover);
-    border-color: var(--gelb);
+/* Überschriften in den Karten */
+#spieleOeffnen strong,
+#einstellungenOeffnen strong,
+#zugangscodeOeffnen strong {
+    color: #f4f7fa !important;
+}
+
+/* Beschreibungstexte */
+#spieleOeffnen span,
+#einstellungenOeffnen span,
+#zugangscodeOeffnen span {
+    color: #b7c4cf !important;
+}
+
+/* Hover-Effekt */
+#spieleOeffnen:hover,
+#einstellungenOeffnen:hover,
+#zugangscodeOeffnen:hover {
+    background: #304555 !important;
+    border-color: #f0b429 !important;
     transform: translateY(-3px);
-}
-
-/* Tastatur-Fokus */
-#startAnsicht button:focus-visible {
-    outline: 3px solid var(--gelb);
-    outline-offset: 3px;
-}
-
-/* Startmenü auf kleinen Handys */
-@media (max-width: 560px) {
-    #startAnsicht button {
-        min-height: 110px;
-        padding: 18px;
-        font-size: 16px;
-    }
 }
