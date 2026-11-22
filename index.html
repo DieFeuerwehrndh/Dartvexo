@@ -81,11 +81,11 @@
     </header>
 
     <main>
-        <!-- Startseite: die drei Hauptbereiche -->
+       
         <section id="startAnsicht" class="begruesung">
-            <h2>Willkommen bei DartVexo!</h2>
-            <p>Was möchtest du heute machen?</p>
-
+    <h2 id="dartvexoBegruessung">Willkommen bei DartVexo!</h2>
+    <p id="dartvexoFrage">Was möchtest du heute machen?</p>
+           
             <div class="hauptnavigation">
                 <button type="button" class="hauptbutton" id="spieleOeffnen">
                     <span class="symbol">🎯</span>
@@ -150,7 +150,7 @@
         <section id="einstellungenAnsicht" class="info-karte" hidden>
             <button type="button" class="zurueck-button" id="einstellungenZurStartseite">← Startseite</button>
             <h2>Einstellungen</h2>
-            <p>Hier kommen die Einstellungen von DartVexo hin.</p>
+            <p>Hier kommen die Einstellungen von DartVexo hin. noch nicht funktionsfähig</p>
             <label for="dartvexoTheme">Darstellung</label>
             <select id="dartvexoTheme">
                 <option value="dark">Dunkel (Standard)</option>
@@ -728,8 +728,138 @@ clubSitzungPruefen();
     });
   }
 </script>
-
-
     
+<script>
+const dartvexoSaetze = [
+    "Schön, dass du wieder da bist!",
+    "Bereit für die nächste Runde?",
+    "Heute wird ein guter Dart-Tag!",
+    "Deine nächste Bestleistung wartet!",
+    "Lust auf ein paar gute Darts?",
+    "Willkommen zurück an der Oche!",
+    "Ein neuer Tag, neue Treffer!",
+    "Dein Dart-Abenteuer geht weiter!",
+    "Zeit für eine Runde Dart!",
+    "Auf geht's zur nächsten Aufnahme!",
+    "Heute zählt jeder Dart!",
+    "Mach dich bereit und leg los!",
+    "Die Darts warten schon auf dich!",
+    "Dein nächstes Spiel beginnt hier!",
+    "Zeig, was in dir steckt!",
+    "Treffer für Treffer zum Ziel!",
+    "DartVexo ist bereit!",
+    "Ein paar Darts gehen immer!",
+    "Zeit, deine Treffsicherheit zu testen!",
+    "Heute steht Dart auf dem Programm!",
+    "Deine Dart-Zentrale ist geöffnet!",
+    "Willkommen in deiner Dart-Welt!",
+    "Bereit für spannende Spiele?",
+    "Die nächste Runde gehört dir!",
+    "Hol dir den nächsten Volltreffer!",
+    "Lass die Darts fliegen!",
+    "Dein Training kann beginnen!",
+    "Heute ist dein Dart-Moment!",
+    "Auf zur nächsten Herausforderung!",
+    "Drei Darts, viele Möglichkeiten!",
+    "Dein Spiel, deine Regeln!",
+    "Es ist Zeit für DartVexo!",
+    "Schön, dich hier zu sehen!",
+    "Bereit für eine neue Herausforderung?",
+    "Mach heute ein paar Punkte!",
+    "Deine Darts warten auf ihren Einsatz!",
+    "Willkommen in deinem Spielbereich!",
+    "Ein Klick und das Spiel beginnt!",
+    "Heute kannst du alles treffen!",
+    "Dein nächster Checkout wartet!",
+    "Dart macht den Tag besser!",
+    "Bereit für eine starke Aufnahme?",
+    "Hier beginnt dein Dart-Training!",
+    "Deine persönliche Dart-Arena wartet!",
+    "Zeit für Präzision und Spaß!",
+    "Ein neues Spiel wartet auf dich!",
+    "DartVexo bringt dich ans Ziel!",
+    "Heute wird ordentlich gezählt!",
+    "Willkommen bei deiner Dart-App!",
+    "Deine nächste Runde startet jetzt!",
+    "Auf die Darts, fertig, los!",
+    "Ein bisschen Dart gefällig?",
+    "Dein Weg zum perfekten Wurf!",
+    "Bereit für den nächsten Punkt?",
+    "Hier dreht sich alles um Dart!",
+    "Deine Spielecke ist bereit!",
+    "Heute ist Trefferzeit!",
+    "Lass uns eine Runde spielen!",
+    "Dein Dart-Abend beginnt hier!",
+    "Auf geht's, Dartspieler!",
+    "Die Oche ruft!",
+    "Ein neuer Versuch, ein neuer Treffer!",
+    "DartVexo wartet auf dich!",
+    "Zeit für deine Lieblingsspiele!",
+    "Bereit, die Punkte zu jagen!",
+    "Dein nächster Wurf zählt!",
+    "Willkommen zum Dart-Training!",
+    "Heute wird das Board erobert!",
+    "Mach dich bereit für den Checkout!",
+    "Deine Dart-Runde kann starten!",
+    "Einfach öffnen und losspielen!",
+    "DartVexo – dein Spiel beginnt!",
+    "Schön, dass du DartVexo nutzt!",
+    "Bereit für einen treffsicheren Tag!",
+    "Viel Spaß bei deiner nächsten Runde!"
+];
+
+const dartvexoWoerter = [
+    "Treffer", "Dart", "Oche", "Bullseye", "Checkout",
+    "Präzision", "Training", "Spiel", "Punkte", "Dreifach",
+    "Doppel", "Volltreffer", "Aufnahme", "Bestleistung",
+    "Herausforderung", "Ziel", "Dartboard", "Darts",
+    "Spielspaß", "Treffsicherheit", "Leg", "Match",
+    "Konzentration", "Erfolg", "Wurf", "Score",
+    "Bull", "Finisher", "Dartzeit", "Runde",
+    "Meisterwurf", "DartArena", "Fokus", "Power",
+    "Dartgefühl", "Spielmodus", "Punktestand",
+    "Dartmoment", "Zielgenauigkeit", "Siegerwurf",
+    "Dartfreude", "Dartprofi", "Spielstart",
+    "Dartchallenge", "Darttraining", "Dartmeister",
+    "DartVexo", "DartAction", "DartSpirit", "DartLegende"
+];
+
+function dartvexoZufall(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+function dartvexoTexteLaden() {
+    const begruessung = document.getElementById("dartvexoBegruessung");
+    const frage = document.getElementById("dartvexoFrage");
+
+    if (!begruessung || !frage) return;
+
+    // Zufällig zwischen Satzmodus und Wortmodus wählen
+    const wortModus = Math.random() < 0.5;
+
+    if (wortModus) {
+        begruessung.textContent =
+            "Willkommen bei DartVexo – " + dartvexoZufall(dartvexoWoerter) + "!";
+
+        frage.textContent =
+            dartvexoZufall(dartvexoWoerter) + " gefällig?";
+    } else {
+        const ersterSatz = dartvexoZufall(dartvexoSaetze);
+
+        let zweiterSatz = dartvexoZufall(dartvexoSaetze);
+
+        // Verhindert, dass beide Texte gleich sind
+        while (zweiterSatz === ersterSatz) {
+            zweiterSatz = dartvexoZufall(dartvexoSaetze);
+        }
+
+        begruessung.textContent = ersterSatz;
+        frage.textContent = zweiterSatz;
+    }
+}
+
+dartvexoTexteLaden();
+</script>
+
 </body>
 </html>
