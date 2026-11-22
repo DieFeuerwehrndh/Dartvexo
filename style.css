@@ -504,265 +504,146 @@ spielbereich-neu button {
     opacity: 1;
     text-decoration: underline;
 }
-/* ==========================================
-   DARTVEXO – HAMBURGER-SEITENMENÜ
-   ========================================== */
 
-.kopf-rechts {
-    display: flex;
-    align-items: center;
-    gap: 18px;
+/* DartVexo – Startbildschirm-Auswahlkarten */
+
+.hauptnavigation {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 30px;
 }
 
-.menue-button {
-    background: #f0b429;
-    color: #101820;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 15px;
-    font-size: 25px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.menue-button:hover {
-    background: #ffd166;
-}
-
-/* Hintergrund */
-.menue-hintergrund {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 999;
-}
-
-/* Seitenmenü */
-.seiten-menue {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 300px;
-    max-width: 85%;
-    height: 100vh;
-    background: #1b2732;
-    border-left: 2px solid #f0b429;
-    z-index: 1000;
-    padding: 25px 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-    box-shadow: -8px 0 25px rgba(0, 0, 0, 0.4);
-}
-
-/* Menü-Kopf */
-.menue-kopf {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    border-bottom: 1px solid #394957;
-    padding-bottom: 15px;
-}
-
-.menue-kopf h2 {
-    color: #f0b429;
-    margin: 0;
-}
-
-.menue-schliessen {
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 25px;
-    cursor: pointer;
-}
-
-/* Menüeinträge */
-.menue-punkt {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    margin-bottom: 10px;
-    background: #263746;
-    color: white;
-    border: 1px solid #394957;
-    border-radius: 9px;
-    text-align: left;
-    font-size: 15px;
-    cursor: pointer;
-    text-decoration: none;
-    box-sizing: border-box;
-}
-
-.menue-punkt:hover {
-    background: #f0b429;
-    color: #101820;
-}
-
-.menue-link {
-    font-family: inherit;
-}
-
-.seiten-menue hr {
-    border: none;
-    border-top: 1px solid #394957;
-    margin: 20px 0;
-}
-
-.menue-hinweis {
-    display: block;
-    margin-top: 5px;
-    font-size: 11px;
-    opacity: 0.7;
-}
-
-/* Vereinszugang im Menü */
-#clubBereich {
-    margin: 15px 0 20px;
-    padding: 15px;
-    background: #101820;
-    border: 1px solid #394957;
-    border-radius: 10px;
-}
-
-#clubBereich h2 {
-    color: #f0b429;
-    font-size: 19px;
-}
-
-#clubBereich label {
-    display: block;
-    margin: 12px 0 6px;
-    font-weight: bold;
-}
-
-#clubBereich input {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-    background: #1b2732;
-    color: white;
-    border: 1px solid #394957;
-    border-radius: 7px;
-}
-
-#clubBereich button {
-    margin-top: 12px;
-    padding: 11px;
-    width: 100%;
-    background: #f0b429;
-    color: #101820;
-    border: none;
-    border-radius: 7px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-#clubBereich button[hidden],
-[hidden] {
-    display: none !important;
-}
-}
-
-
-/* ==========================================
-   DARTVEXO – NEUES STARTMENÜ
-   ========================================== */
-
-/* Startmenü-Buttons */
-#startAnsicht button {
-    display: flex;
+.hauptnavigation .hauptbutton {
+    display: flex !important;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
 
     width: 100%;
-    min-height: 130px;
+    min-height: 190px;
     padding: 22px;
 
-    background: var(--karte);
-    color: var(--text);
-
-    border: 1px solid #344757;
-    border-radius: 16px;
-
-    font-size: 18px;
-    font-weight: bold;
-    text-align: left;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease;
-}
-
-/* Beim Darüberfahren */
-#startAnsicht button:hover {
-    background: var(--karte-hover);
-    border-color: var(--gelb);
-    transform: translateY(-3px);
-}
-
-/* Tastatur-Fokus */
-#startAnsicht button:focus-visible {
-    outline: 3px solid var(--gelb);
-    outline-offset: 3px;
-}
-
-/* Startmenü auf kleinen Handys */
-@media (max-width: 560px) {
-    #startAnsicht button {
-        min-height: 110px;
-        padding: 18px;
-        font-size: 16px;
-    }
-}
-
-
-/* ==========================================
-   DARTVEXO – STARTMENÜ-KARTEN
-   ========================================== */
-
-#spieleOeffnen,
-#einstellungenOeffnen,
-#zugangscodeOeffnen {
-    background: #243442 !important;
+    background-color: #243442 !important;
     color: #f4f7fa !important;
 
     border: 1px solid #344757 !important;
-    border-radius: 16px !important;
+    border-radius: 20px;
 
-    padding: 22px !important;
-    min-height: 190px;
-
+    font-family: inherit;
     text-align: left;
     cursor: pointer;
 
-    transition: all 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+
+    transition: background-color 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
 }
 
-/* Überschriften in den Karten */
-#spieleOeffnen strong,
-#einstellungenOeffnen strong,
-#zugangscodeOeffnen strong {
+.hauptnavigation .hauptbutton .karten-titel {
     color: #f4f7fa !important;
+    font-size: 22px;
+    font-weight: bold;
 }
 
-/* Beschreibungstexte */
-#spieleOeffnen span,
-#einstellungenOeffnen span,
-#zugangscodeOeffnen span {
+.hauptnavigation .hauptbutton .beschreibung {
     color: #b7c4cf !important;
+    font-size: 16px;
 }
 
-/* Hover-Effekt */
-#spieleOeffnen:hover,
-#einstellungenOeffnen:hover,
-#zugangscodeOeffnen:hover {
-    background: #304555 !important;
+.hauptnavigation .hauptbutton:hover {
+    background-color: #304555 !important;
     border-color: #f0b429 !important;
     transform: translateY(-3px);
 }
+
+.hauptnavigation .hauptbutton:focus-visible {
+    outline: 3px solid #f0b429;
+    outline-offset: 3px;
+}
+
+/* Handyansicht */
+@media (max-width: 700px) {
+    .hauptnavigation {
+        grid-template-columns: 1fr;
+    }
+
+    .hauptnavigation .hauptbutton {
+        min-height: 125px;
+    }
+}
+
+/* DartVexo – Startbildschirm-Auswahlkarten */
+
+.hauptnavigation {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.hauptnavigation .hauptbutton {
+    display: flex !important;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 12px;
+
+    width: 100%;
+    min-height: 190px;
+    padding: 22px;
+
+    background-color: #243442 !important;
+    color: #f4f7fa !important;
+
+    border: 1px solid #344757 !important;
+    border-radius: 20px;
+
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    transition: background-color 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+}
+
+.hauptnavigation .hauptbutton .karten-titel {
+    color: #f4f7fa !important;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.hauptnavigation .hauptbutton .beschreibung {
+    color: #b7c4cf !important;
+    font-size: 16px;
+}
+
+.hauptnavigation .hauptbutton:hover {
+    background-color: #304555 !important;
+    border-color: #f0b429 !important;
+    transform: translateY(-3px);
+}
+
+.hauptnavigation .hauptbutton:focus-visible {
+    outline: 3px solid #f0b429;
+    outline-offset: 3px;
+}
+
+/* Handyansicht */
+@media (max-width: 700px) {
+    .hauptnavigation {
+        grid-template-columns: 1fr;
+    }
+
+    .hauptnavigation .hauptbutton {
+        min-height: 125px;
+    }
+}
+
