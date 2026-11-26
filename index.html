@@ -682,6 +682,237 @@ clubSitzungPruefen();
 </script>
 
 <script>
+/* ==========================================
+   DARTVEXO – PATREON-VERBINDUNG
+   ========================================== */
+
+const PATREON_API =
+    "https://dartvexo.niclasbehrens6.workers.dev";
+
+const PATREON_SESSION_KEY =
+    "dartvexo_patreon_session";
+
+const patreonStatus =
+    document.getElementById("patreonStatus");
+
+const patreonVerbinden =
+    document.getElementById("patreonVerbinden");
+
+const patreonAbmelden =
+    document.getElementById("patreonAbmelden");
+
+
+function patreonAnzeigeAktualisieren(
+    verbunden,
+    name = "",
+    hasAccess = false
+) {
+    if (patreonStatus) {
+        if (!verbunden) {
+            patreonStatus.textContent =
+                "Noch kein Patreon-Konto verbunden.";
+        } else if (hasAccess) {
+            patreonStatus.textContent =
+                "Patreon verbunden: " + name +
+                " – Mitgliedschaft aktiv.";
+        } else {
+            patreonStatus.textContent =
+                "Patreon verbunden: " + name +
+                " – aktuell keine aktive Mitgliedschaft.";
+        }
+    }
+
+    if (patreonAbmelden) {
+        patreonAbmelden.hidden = !verbunden;
+    }
+
+    if (patreonVerbinden) {
+        patreonVerbinden.textContent = verbunden
+            ? "Patreon-Verbindung erneuern"
+            : "Mit Patreon verbinden";
+    }
+}
+
+
+// Patreon-Rücksprung-Code gegen Sitzung tauschen
+async function patreonRuecksprungVerarbeiten() {
+    const url = new URL(window.location.href);
+
+    const code = url.searchParams.get("patreon_code");
+    const error = url.searchParams.get("patreon_error");
+
+    if (error) {
+        if (patreonStatus) {
+            patreonStatus.textContent =
+                "Patreon-Verbindung fehlgeschlagen: " + error;
+        }
+
+        url.searchParams.delete("patreon_error");
+
+        history.replaceState(
+            {},
+            document.title,
+            url.pathname + url.search + url.hash
+        );
+
+        return;
+    }
+
+    if (!code) {
+        return;
+    }
+
+    if (patreonStatus) {
+        patreonStatus.textContent =
+            "Patreon-Verbindung wird abgeschlossen ...";
+    }
+
+    try {
+        const antwort = await fetch(
+            PATREON_API + "/api/auth/redeem",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    code: code
+                })
+            }
+        );
+
+        const daten = await antwort.json();
+
+        if (!antwort.ok || !daten.success) {
+            throw new Error(
+                daten.error || "CODE_INVALID"
+            );
+        }
+
+        localStorage.setItem(
+            PATREON_SESSION_KEY,
+            daten.sessionToken
+        );
+
+        url.searchParams.delete("patreon_code");
+
+        history.replaceState(
+            {},
+            document.title,
+            url.pathname + url.search + url.hash
+        );
+
+        await patreonSitzungPruefen();
+
+    } catch (fehler) {
+        console.error(
+            "Patreon-Verbindung fehlgeschlagen:",
+            fehler
+        );
+
+        if (patreonStatus) {
+            patreonStatus.textContent =
+                "Patreon-Verbindung konnte nicht abgeschlossen werden.";
+        }
+    }
+}
+
+
+// Gespeicherte Patreon-Sitzung überprüfen
+async function patreonSitzungPruefen() {
+    const token = localStorage.getItem(
+        PATREON_SESSION_KEY
+    );
+
+    if (!token) {
+        patreonAnzeigeAktualisieren(false);
+        return;
+    }
+
+    try {
+        const antwort = await fetch(
+            PATREON_API + "/api/auth/status",
+            {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        const daten = await antwort.json();
+
+        if (daten.authenticated) {
+            patreonAnzeigeAktualisieren(
+                true,
+                daten.user?.name || "Patreon-Nutzer",
+                daten.hasAccess === true
+            );
+        } else {
+            localStorage.removeItem(
+                PATREON_SESSION_KEY
+            );
+
+            patreonAnzeigeAktualisieren(false);
+        }
+
+    } catch (fehler) {
+        console.error(
+            "Patreon-Status konnte nicht geprüft werden:",
+            fehler
+        );
+
+        if (patreonStatus) {
+            patreonStatus.textContent =
+                "Verbindung zum Patreon-Server fehlgeschlagen.";
+        }
+    }
+}
+
+
+// Patreon-Konto trennen
+if (patreonAbmelden) {
+    patreonAbmelden.addEventListener(
+        "click",
+        async function () {
+            const token = localStorage.getItem(
+                PATREON_SESSION_KEY
+            );
+
+            try {
+                if (token) {
+                    await fetch(
+                        PATREON_API + "/api/auth/logout",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Authorization": "Bearer " + token
+                            }
+                        }
+                    );
+                }
+            } catch (fehler) {
+                console.warn(
+                    "Patreon-Abmeldung beim Server fehlgeschlagen."
+                );
+            }
+
+            localStorage.removeItem(
+                PATREON_SESSION_KEY
+            );
+
+            patreonAnzeigeAktualisieren(false);
+        }
+    );
+}
+
+
+// Beim Laden der App Verbindung prüfen
+patreonRuecksprungVerarbeiten().then(function () {
+    patreonSitzungPruefen();
+});
+</script>
+
+<script>
 /* DartVexo – Navigation für Startseite, Spiele, Einstellungen und Zugangscode */
 (function () {
     const start = document.getElementById("startAnsicht");
