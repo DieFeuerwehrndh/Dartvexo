@@ -956,64 +956,6 @@ patreonRuecksprungVerarbeiten().then(function () {
     document.getElementById("einstellungenZurStartseite").addEventListener("click", startseiteAnzeigen);
     document.getElementById("zugangscodeZurStartseite").addEventListener("click", startseiteAnzeigen);
 
-
-    // Patreon-Zugang bei jedem Öffnen eines Spiels prüfen
-    document.querySelectorAll("#spieleAnsicht [data-mode]").forEach(button => {
-        button.addEventListener("click", async function (event) {
-            event.preventDefault();
-
-            const sessionToken = localStorage.getItem("dartvexo_patreon_session");
-
-            if (!sessionToken) {
-                alert("🔒 Bitte verbinde zuerst deinen Patreon-Account in den Einstellungen.");
-                alleAnsichtenSchliessen();
-                einstellungen.hidden = false;
-                return;
-            }
-
-            try {
-                const antwort = await fetch(
-                    "https://dartvexo.niclasbehrens6.workers.dev/api/auth/status",
-                    {
-                        headers: {
-                            "Authorization": "Bearer " + sessionToken
-                        }
-                    }
-                );
-
-                const daten = await antwort.json();
-
-                if (!antwort.ok || !daten.authenticated || !daten.hasAccess) {
-                    localStorage.removeItem("dartvexo_patreon_session");
-
-                    alert("🔒 Dein Patreon-Zugang ist nicht gültig. Bitte verbinde deinen Account erneut.");
-
-                    alleAnsichtenSchliessen();
-                    einstellungen.hidden = false;
-                    return;
-                }
-
-                const mode = button.dataset.mode;
-
-                const sectionByMode = {
-                    tictactoe: document.getElementById("tictactoeBereich"),
-                    x01: document.getElementById("x01Bereich"),
-                    checkout: document.getElementById("checkoutBereich"),
-                    stats: document.getElementById("statsBereich")
-                };
-
-                if (sectionByMode[mode]) {
-                    alleAnsichtenSchliessen();
-                    sectionByMode[mode].hidden = false;
-                }
-
-            } catch (error) {
-                console.error("Patreon-Zugangsprüfung fehlgeschlagen:", error);
-                alert("⚠️ Patreon konnte gerade nicht geprüft werden. Bitte versuche es erneut.");
-            }
-        });
-    });
-
     ["zurueckStart", "x01Zurueck", "checkoutZurueck", "statsZurueck"].forEach(id => {
         const button = document.getElementById(id);
         if (button) button.addEventListener("click", spielauswahlAnzeigen);
