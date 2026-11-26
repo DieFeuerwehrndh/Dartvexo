@@ -1,4 +1,3 @@
-
 const spielkarten = document.querySelectorAll(".spielkarte");
 
 const infoTitel = document.getElementById("infoTitel");
@@ -60,12 +59,51 @@ function showMenu() {
     });
 }
 
-// Einen Spielmodus öffnen
-function openGame(modus) {
+
+async function openGame(modus) {
     const daten = spielModi[modus];
 
     if (!daten) return;
 
+    // Patreon-Sitzung aus dem lokalen Speicher holen
+    const sessionToken = localStorage.getItem("dartvexo_patreon_session");
+
+    if (!sessionToken) {
+        alert("🔒 Bitte verbinde zuerst deinen Patreon-Account in den Einstellungen.");
+        return;
+    }
+
+    // Patreon-Zugang beim Server überprüfen
+    try {
+        const antwort = await fetch(
+            "https://dartvexo.niclasbehrens6.workers.dev/api/auth/status",
+            {
+                headers: {
+                    "Authorization": "Bearer " + sessionToken
+                }
+            }
+        );
+
+        const pruefung = await antwort.json();
+
+        if (
+            !antwort.ok ||
+            !pruefung.authenticated ||
+            !pruefung.hasAccess
+        ) {
+            localStorage.removeItem("dartvexo_patreon_session");
+
+            alert("🔒 Dein Patreon-Zugang ist nicht gültig. Bitte verbinde deinen Account erneut.");
+            return;
+        }
+
+    } catch (fehler) {
+        console.error("Patreon-Prüfung fehlgeschlagen:", fehler);
+        alert("⚠️ Patreon konnte gerade nicht geprüft werden. Bitte versuche es erneut.");
+        return;
+    }
+
+    // Erst nach erfolgreicher Prüfung das Spiel öffnen
     alleSpielbereicheSchliessen();
 
     if (spielbereich) spielbereich.hidden = true;
@@ -98,6 +136,7 @@ function openGame(modus) {
         behavior: "smooth"
     });
 }
+
 
 // Spielmodus-Auswahlbuttons
 spielkarten.forEach(function (karte) {
