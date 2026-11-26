@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "dartVexo-v3";
+const CACHE_NAME = "dartvexo-v4";
 
 const APP_FILES = [
     "./",
@@ -11,7 +11,7 @@ const APP_FILES = [
     "./icons/icon-512.png"
 ];
 
-// Installation und Dateien speichern
+// App-Dateien beim Installieren speichern
 self.addEventListener("install", (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
@@ -22,54 +22,90 @@ self.addEventListener("install", (event) => {
     self.skipWaiting();
 });
 
-// Alte Versionen entfernen
+// Alte DartForge- und DartVexo-Caches entfernen
 self.addEventListener("activate", (event) => {
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames
-                    .filter((name) =>
-                        name.startsWith("dartforge-") &&
-                        name !== CACHE_NAME
-                    )
+                    .filter((name) => {
+                        const lowerName = name.toLowerCase();
+
+                        return (
+                            (lowerName.startsWith("dartforge-") ||
+                             lowerName.startsWith("dartvexo-")) &&
+                            name !== CACHE_NAME
+                        );
+                    })
                     .map((name) => caches.delete(name))
             );
+        }).then(() => {
+            return self.clients.claim();
         })
     );
-
-    self.clients.claim();
 });
 
-// Dateien laden
+// Dateien laden und aktualisieren
 self.addEventListener("fetch", (event) => {
-    if (event.request.method !== "GET") return;
+    if (event.request.method !== "GET") {
+        return;
+    }
 
     const url = new URL(event.request.url);
 
-    if (url.origin !== self.location.origin) return;
+    // Nur Dateien der eigenen Website behandeln
+    if (url.origin !== self.location.origin) {
+        return;
+    }
 
+    // HTML-Seiten: zuerst online versuchen
+    if (event.request.mode === "navigate") {
+        event.respondWith(
+            fetch(event.request)
+                .then((response) => {
+                    if (response && response.ok) {
+                        const responseCopy = response.clone();
+
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put("./index.html", responseCopy);
+                        });
+                    }
+
+                    return response;
+                })
+                .catch(() => {
+                    return caches.match("./index.html");
+                })
+        );
+
+        return;
+    }
+
+    // Andere Dateien: online laden und Cache aktualisieren
     event.respondWith(
-        caches.match(event.request).then((cached) => {
-            if (cached) {
-                return cached;
-            }
+        fetch(event.request)
+            .then((response) => {
+                if (response && response.ok) {
+                    const responseCopy = response.clone();
 
-            return fetch(event.request).then((response) => {
-                if (!response || !response.ok) {
-                    throw new Error("Datei konnte nicht geladen werden");
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseCopy);
+                    });
                 }
 
                 return response;
-            }).catch(() => {
-                if (event.request.mode === "navigate") {
-                    return caches.match("./index.html");
-                }
+            })
+            .catch(() => {
+                return caches.match(event.request).then((cached) => {
+                    if (cached) {
+                        return cached;
+                    }
 
-                return new Response("Offline nicht verfügbar", {
-                    status: 503,
-                    statusText: "Service Unavailable"
+                    return new Response("Offline nicht verfügbar", {
+                        status: 503,
+                        statusText: "Service Unavailable"
+                    });
                 });
-            });
-        })
+            })
     );
 });
