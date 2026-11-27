@@ -1,4 +1,3 @@
-
 const ALLOWED_ORIGIN = "https://diefeuerwehrndh.github.io";
 const FRONTEND_URL = "https://diefeuerwehrndh.github.io/Dartvexo/";
 const REDIRECT_URI =
@@ -173,6 +172,90 @@ export default {
             }
         }
 // Vereinszugang aktivieren
+        
+        // Gemeinsamen Zugangscode aktivieren
+        if (
+            request.method === "POST" &&
+            url.pathname === "/api/access/activate"
+        ) {
+            let body;
+
+            try {
+                body = await request.json();
+            } catch {
+                return json({
+                    success: false,
+                    error: "INVALID_JSON"
+                }, headers, 400);
+            }
+
+            const submittedCode = String(body.code || "").trim();
+
+            if (!submittedCode) {
+                return json({
+                    success: false,
+                    error: "CODE_MISSING"
+                }, headers, 400);
+            }
+
+            const adminCode = String(env.ADMIN_ACCESS_CODE || "");
+            const clubCode = String(env.CLUB_ACTIVATION_CODE || "");
+
+            let accessType = "";
+
+            // Admin-Code hat Vorrang
+            if (adminCode && submittedCode === adminCode) {
+                accessType = "admin";
+            } else if (clubCode && submittedCode === clubCode) {
+                accessType = "club";
+            }
+
+            if (!accessType) {
+                return json({
+                    success: false,
+                    error: "INVALID_ACCESS_CODE"
+                }, headers, 401);
+            }
+
+            const sessionToken = randomToken();
+
+            const userName = accessType === "admin"
+                ? "DartVexo-Admin"
+                : "Vereinszugang";
+
+            const sessionData = {
+                type: accessType,
+                user: {
+                    name: userName,
+                    hasAccess: true
+                }
+            };
+
+            if (accessType === "club") {
+                sessionData.deviceName = String(
+                    body.deviceName || "Vereinsgerät"
+                ).slice(0, 40);
+            }
+
+            await env.SESSIONS.put(
+                `session:${sessionToken}`,
+                JSON.stringify(sessionData),
+                { expirationTtl: CLUB_SESSION_TTL }
+            );
+
+            return json({
+                success: true,
+                authenticated: true,
+                hasAccess: true,
+                isAdmin: accessType === "admin",
+                isClub: accessType === "club",
+                sessionToken,
+                user: {
+                    name: userName
+                }
+            }, headers);
+        }
+
 if (
     request.method === "POST" &&
     url.pathname === "/api/club/activate"
@@ -407,61 +490,26 @@ if (
             }
 
             let data = JSON.parse(stored);
-// Vereinszugang prüfen
-if (data.type === "club") {
-    await env.SESSIONS.put(
-        sessionKey,
-        JSON.stringify(data),
-        { expirationTtl: CLUB_SESSION_TTL }
-    );
 
-    return json({
-        success: true,
-        authenticated: true,
-        hasAccess: true,
-        user: {
-            name: "Vereinszugang"
-        }
-    }, headers);
-}
-            try {
-                if (Date.now() >= data.expiresAt) {
-                    const refreshed = await exchangeToken(env, {
-                        grant_type: "refresh_token",
-                        refresh_token: data.refreshToken
-                    });
-
-                    data.accessToken = refreshed.access_token;
-                    data.refreshToken = refreshed.refresh_token ||
-                        data.refreshToken;
-                    data.expiresAt = Date.now() +
-                        Number(refreshed.expires_in || 3600) * 1000;
-                }
-
-                data.user = await getPatreonIdentity(data.accessToken);
-
+            // Vereins- und Adminzugang prüfen
+            if (data.type === "club" || data.type === "admin") {
                 await env.SESSIONS.put(
                     sessionKey,
                     JSON.stringify(data),
-                    { expirationTtl: 60 * 60 * 24 * 30 }
+                    { expirationTtl: CLUB_SESSION_TTL }
                 );
 
                 return json({
                     success: true,
                     authenticated: true,
-                    hasAccess: data.user.hasAccess,
-                    user: { name: data.user.name }
+                    hasAccess: true,
+                    isAdmin: data.type === "admin",
+                    isClub: data.type === "club",
+                    user: {
+                        name: data.user.name
+                    }
                 }, headers);
-            } catch {
-                await env.SESSIONS.delete(sessionKey);
-
-                return json({
-                    success: false,
-                    authenticated: false,
-                    error: "PATREON_CHECK_FAILED"
-                }, headers, 401);
             }
-        }
 
         // Abmelden
         if (
