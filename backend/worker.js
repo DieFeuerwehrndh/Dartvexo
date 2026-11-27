@@ -1,10 +1,13 @@
+
 const ALLOWED_ORIGIN = "https://diefeuerwehrndh.github.io";
 const FRONTEND_URL = "https://diefeuerwehrndh.github.io/Dartvexo/";
 const REDIRECT_URI =
     "https://dartvexo.niclasbehrens6.workers.dev/auth/patreon/callback";
+
 const CAMPAIGN_ID = "17093464";
 const CLUB_SESSION_TTL = 60 * 60 * 24 * 365;
 
+// CORS
 function corsHeaders(origin) {
     return {
         "Access-Control-Allow-Origin":
@@ -16,10 +19,12 @@ function corsHeaders(origin) {
     };
 }
 
+// JSON-Antwort
 function json(data, headers, status = 200) {
     return Response.json(data, { status, headers });
 }
 
+// Zufälligen Sitzungscode erzeugen
 function randomToken() {
     const bytes = new Uint8Array(32);
     crypto.getRandomValues(bytes);
@@ -30,10 +35,12 @@ function randomToken() {
         .replaceAll("=", "");
 }
 
+// Weiterleitung
 function redirect(url) {
     return Response.redirect(url, 302);
 }
 
+// Patreon-Mitgliedschaft prüfen
 async function getPatreonIdentity(accessToken) {
     const apiUrl = new URL(
         "https://www.patreon.com/api/oauth2/v2/identity"
@@ -58,6 +65,7 @@ async function getPatreonIdentity(accessToken) {
     }
 
     const result = await response.json();
+
     const memberships =
         result.data?.relationships?.memberships?.data || [];
 
@@ -81,6 +89,7 @@ async function getPatreonIdentity(accessToken) {
     };
 }
 
+// Patreon-Token austauschen oder erneuern
 async function exchangeToken(env, body) {
     const form = new URLSearchParams({
         grant_type: body.grant_type,
@@ -119,11 +128,15 @@ export default {
         const headers = corsHeaders(origin);
         const url = new URL(request.url);
 
+        // CORS-Vorab-Anfrage
         if (request.method === "OPTIONS") {
-            return new Response(null, { status: 204, headers });
+            return new Response(null, {
+                status: 204,
+                headers
+            });
         }
 
-        // Patreon-Kampagne abrufen (bestehende Route)
+        // Patreon-Kampagne abrufen
         if (
             request.method === "GET" &&
             url.pathname === "/api/setup/campaign"
@@ -171,9 +184,9 @@ export default {
                 }, headers, 502);
             }
         }
-// Vereinszugang aktivieren
-        
+
         // Gemeinsamen Zugangscode aktivieren
+        // Unterstützt Vereinscode und Admin-Code
         if (
             request.method === "POST" &&
             url.pathname === "/api/access/activate"
@@ -231,6 +244,7 @@ export default {
                 }
             };
 
+            // Gerätename nur für Vereinszugang speichern
             if (accessType === "club") {
                 sessionData.deviceName = String(
                     body.deviceName || "Vereinsgerät"
@@ -256,63 +270,7 @@ export default {
             }, headers);
         }
 
-if (
-    request.method === "POST" &&
-    url.pathname === "/api/club/activate"
-) {
-    let body;
-
-    try {
-        body = await request.json();
-    } catch {
-        return json({
-            success: false,
-            error: "INVALID_JSON"
-        }, headers, 400);
-    }
-
-    if (!env.CLUB_ACTIVATION_CODE) {
-        return json({
-            success: false,
-            error: "CLUB_SECRET_MISSING"
-        }, headers, 500);
-    }
-
-    const submittedCode = String(body.code || "").trim();
-
-    if (!submittedCode || submittedCode !== env.CLUB_ACTIVATION_CODE) {
-        return json({
-            success: false,
-            error: "INVALID_CLUB_CODE"
-        }, headers, 401);
-    }
-
-    const sessionToken = randomToken();
-
-    await env.SESSIONS.put(
-        `session:${sessionToken}`,
-        JSON.stringify({
-            type: "club",
-            user: {
-                name: "Vereinszugang",
-                hasAccess: true
-            },
-            deviceName: String(body.deviceName || "Vereinsgerät").slice(0, 40)
-        }),
-        { expirationTtl: CLUB_SESSION_TTL }
-    );
-
-    return json({
-        success: true,
-        authenticated: true,
-        hasAccess: true,
-        sessionToken,
-        user: {
-            name: "Vereinszugang"
-        }
-    }, headers);
-}
-        // Login bei Patreon starten
+        // Patreon-Login starten
         if (
             request.method === "GET" &&
             url.pathname === "/auth/patreon/login"
@@ -351,7 +309,7 @@ if (
             return redirect(authUrl.toString());
         }
 
-        // Patreon leitet nach Zustimmung hierher zurück
+        // Patreon-Callback nach Zustimmung
         if (
             request.method === "GET" &&
             url.pathname === "/auth/patreon/callback"
@@ -367,6 +325,7 @@ if (
 
             const stateKey = `oauth_state:${state}`;
             const validState = await env.SESSIONS.get(stateKey);
+
             await env.SESSIONS.delete(stateKey);
 
             if (!validState) {
@@ -421,7 +380,9 @@ if (
             try {
                 body = await request.json();
             } catch {
-                return json({ success: false }, headers, 400);
+                return json({
+                    success: false
+                }, headers, 400);
             }
 
             if (!body.code) {
@@ -433,6 +394,7 @@ if (
 
             const handoffKey = `handoff:${body.code}`;
             const handoff = await env.SESSIONS.get(handoffKey);
+
             await env.SESSIONS.delete(handoffKey);
 
             if (!handoff) {
@@ -461,13 +423,14 @@ if (
             }, headers);
         }
 
-        // Sitzung und Patreon-Mitgliedschaft prüfen
+        // Sitzung und Zugang prüfen
         if (
             request.method === "GET" &&
             url.pathname === "/api/auth/status"
         ) {
             const authorization =
                 request.headers.get("Authorization") || "";
+
             const sessionToken = authorization.startsWith("Bearer ")
                 ? authorization.slice(7)
                 : "";
@@ -511,6 +474,50 @@ if (
                 }, headers);
             }
 
+            // Patreon-Sitzung und Mitgliedschaft prüfen
+            try {
+                if (Date.now() >= data.expiresAt) {
+                    const refreshed = await exchangeToken(env, {
+                        grant_type: "refresh_token",
+                        refresh_token: data.refreshToken
+                    });
+
+                    data.accessToken = refreshed.access_token;
+                    data.refreshToken = refreshed.refresh_token ||
+                        data.refreshToken;
+                    data.expiresAt = Date.now() +
+                        Number(refreshed.expires_in || 3600) * 1000;
+                }
+
+                data.user = await getPatreonIdentity(data.accessToken);
+
+                await env.SESSIONS.put(
+                    sessionKey,
+                    JSON.stringify(data),
+                    { expirationTtl: 60 * 60 * 24 * 30 }
+                );
+
+                return json({
+                    success: true,
+                    authenticated: true,
+                    hasAccess: data.user.hasAccess,
+                    isAdmin: false,
+                    isClub: false,
+                    user: {
+                        name: data.user.name
+                    }
+                }, headers);
+            } catch {
+                await env.SESSIONS.delete(sessionKey);
+
+                return json({
+                    success: false,
+                    authenticated: false,
+                    error: "PATREON_CHECK_FAILED"
+                }, headers, 401);
+            }
+        }
+
         // Abmelden
         if (
             request.method === "POST" &&
@@ -518,6 +525,7 @@ if (
         ) {
             const authorization =
                 request.headers.get("Authorization") || "";
+
             const sessionToken = authorization.startsWith("Bearer ")
                 ? authorization.slice(7)
                 : "";
@@ -528,7 +536,9 @@ if (
                 );
             }
 
-            return json({ success: true }, headers);
+            return json({
+                success: true
+            }, headers);
         }
 
         // Backend testen
@@ -543,6 +553,7 @@ if (
             }, headers);
         }
 
+        // Unbekannte Route
         return json({
             success: false,
             message: "Diese Route existiert nicht."
