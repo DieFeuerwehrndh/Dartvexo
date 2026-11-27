@@ -467,7 +467,6 @@
 /* ==========================================
    DARTVEXO – VEREINSZUGANG
    ========================================== */
-
 const CLUB_API = "https://dartvexo.niclasbehrens6.workers.dev";
 const CLUB_SESSION_KEY = "dartvexo_club_session";
 
@@ -859,7 +858,8 @@ patreonRuecksprungVerarbeiten().then(function () {
         document.getElementById("checkoutBereich"),
         document.getElementById("statsBereich")
     ];
-
+const zugang = document.getElementById("zugangscodeAnsicht");
+    
     function alleAnsichtenSchliessen() {
         [start, spiele, einstellungen, zugang, ...gameSections].forEach(section => {
             if (section) section.hidden = true;
