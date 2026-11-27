@@ -99,14 +99,6 @@
                     <span class="beschreibung">App anpassen</span>
                 </button>
 
-                <button type="button" class="hauptbutton" id="zugangscodeOeffnen">
-                    <span class="symbol">🔑</span>
-                    <span class="karten-titel">Zugangscode</span>
-                    <span class="beschreibung">Spiele und Vereinszugang freischalten</span>
-                </button>
-            </div>
-        </section>
-
         <!-- Spielauswahl: erst nach Klick auf Spiele sichtbar -->
         <section id="spieleAnsicht" class="spielbereich" hidden>
             <div class="seiten-kopf">
@@ -181,63 +173,6 @@
     </button>
 </div>
 
-        </section>
-
-        <!-- Zugangscode und bestehender Vereinszugang -->
-        <section id="zugangscodeAnsicht" class="info-karte" hidden>
-            <button type="button" class="zurueck-button" id="zugangscodeZurStartseite">← Startseite</button>
-            <h2>Zugangscode & Freischaltung</h2>
-            <p>Aktiviere hier deinen DartVexo-Zugang. Die Patreon-Stufe bestimmt, welche Spiele und Funktionen verfügbar sind.</p>
-
-            <div class="premium-zugang">
-                <h3>Patreon / Premium</h3>
-                <p>Mit deinem Patreon-Zugang kannst du deine Mitgliedschaft verbinden.</p>
-                <a class="menue-punkt menue-link" href="https://dartvexo.niclasbehrens6.workers.dev/auth/patreon/login">
-                    Patreon-Zugang verbinden
-                </a>
-            </div>
-
-    <section class="info-karte" id="clubBereich">
-        <h2>Vereinszugang</h2>
-        <p>
-            Aktiviere DartVexo für dein Dartverein-Gerät.
-            Jedes Tablet benötigt eine einmalige Aktivierung.
-        </p>
-
-        <div id="clubAktivierung">
-            <label for="clubDeviceName">Gerätename</label>
-            <input
-                type="text"
-                id="clubDeviceName"
-                placeholder="z. B. Dartboard 1"
-                maxlength="40"
-            >
-
-            <label for="clubCode">Aktivierungscode</label>
-            <input
-                type="password"
-                id="clubCode"
-                placeholder="Vereinscode eingeben"
-                autocomplete="off"
-            >
-
-            <button type="button" id="clubAktivieren">
-                Vereinszugang aktivieren
-            </button>
-        </div>
-
-        <p id="clubStatus" aria-live="polite">
-            Noch kein Vereinsgerät aktiviert.
-        </p>
-
-        <button
-            type="button"
-            id="clubAbmelden"
-            hidden
-        >
-            Vereinsgerät abmelden
-        </button>
-    </section>
         </section>
 
 <section id="tictactoeBereich" class="info-karte spielbereich-neu" hidden>
@@ -918,7 +853,6 @@ patreonRuecksprungVerarbeiten().then(function () {
     const start = document.getElementById("startAnsicht");
     const spiele = document.getElementById("spieleAnsicht");
     const einstellungen = document.getElementById("einstellungenAnsicht");
-    const zugang = document.getElementById("zugangscodeAnsicht");
     const gameSections = [
         document.getElementById("tictactoeBereich"),
         document.getElementById("x01Bereich"),
@@ -947,14 +881,9 @@ patreonRuecksprungVerarbeiten().then(function () {
         alleAnsichtenSchliessen();
         einstellungen.hidden = false;
     });
-    document.getElementById("zugangscodeOeffnen").addEventListener("click", function () {
-        alleAnsichtenSchliessen();
-        zugang.hidden = false;
-    });
 
     document.getElementById("spieleZurStartseite").addEventListener("click", startseiteAnzeigen);
     document.getElementById("einstellungenZurStartseite").addEventListener("click", startseiteAnzeigen);
-    document.getElementById("zugangscodeZurStartseite").addEventListener("click", startseiteAnzeigen);
 
     ["zurueckStart", "x01Zurueck", "checkoutZurueck", "statsZurueck"].forEach(id => {
         const button = document.getElementById(id);
