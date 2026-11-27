@@ -1,19 +1,21 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dartvexo - Dein Dart-spiel</title>
-    
-<link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-<meta name="theme-color" content="#1b2732">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Dartvexo">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>DartVexo – Dein Dart-Spiel</title>
 
-    <link rel="stylesheet" href="style.css">\n
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <link rel="stylesheet" href="style.css">
+
+    <meta name="theme-color" content="#1b2732">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="DartVexo">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <style>
         .hauptnavigation {
             display: grid;
@@ -21,6 +23,7 @@
             gap: 14px;
             margin-top: 20px;
         }
+
         .hauptbutton {
             display: flex;
             flex-direction: column;
@@ -32,10 +35,24 @@
             border-radius: 16px;
             cursor: pointer;
         }
-        .hauptbutton .symbol { font-size: 1.8rem; }
-        .hauptbutton .karten-titel { font-size: 1.2rem; font-weight: 700; }
-        .hauptbutton .beschreibung { opacity: .8; }
-        .seiten-kopf { margin-bottom: 16px; }
+
+        .hauptbutton .symbol {
+            font-size: 1.8rem;
+        }
+
+        .hauptbutton .karten-titel {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .hauptbutton .beschreibung {
+            opacity: .8;
+        }
+
+        .seiten-kopf {
+            margin-bottom: 16px;
+        }
+
         .spiel-liste {
             display: flex !important;
             flex-direction: column;
@@ -45,6 +62,7 @@
             overscroll-behavior: contain;
             padding: 4px 3px 18px;
         }
+
         .spiel-liste .spielkarte {
             width: 100%;
             min-height: 110px;
@@ -54,20 +72,33 @@
             text-align: left;
             gap: 7px;
         }
+
         .level-hinweis {
             display: inline-block;
             margin-top: 4px;
             font-size: .85rem;
             opacity: .75;
         }
-        #zugangscodeAnsicht .premium-zugang { margin: 18px 0; }
-        #zugangscodeAnsicht .menue-link { display: inline-block; }
+
+        .club-einstellungen,
+        .patreon-einstellungen {
+            margin-top: 24px;
+        }
+
+        .club-einstellungen input,
+        .club-einstellungen button,
+        .club-einstellungen select {
+            margin-bottom: 12px;
+        }
+
         @media (min-width: 700px) {
-            .hauptnavigation { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .hauptnavigation {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
         }
     </style>
-
 </head>
+
 <body>
 
     <header class="kopf">
@@ -75,969 +106,669 @@
             <h1><span>Dart</span>Vexo</h1>
             <p>Dein persönlicher Dart-Hub</p>
         </div>
+
         <div class="kopf-rechts">
             <div class="dart-symbol" aria-hidden="true">🎯</div>
         </div>
     </header>
 
     <main>
-       
+
         <section id="startAnsicht" class="begruesung">
-    <h2 id="dartvexoBegruessung">Willkommen bei DartVexo!</h2>
-    <p id="dartvexoFrage">Was möchtest du heute machen?</p>
-           
+            <h2 id="dartvexoBegruessung">Willkommen bei DartVexo!</h2>
+            <p id="dartvexoFrage">Was möchtest du heute machen?</p>
+
             <div class="hauptnavigation">
-                <button type="button" class="hauptbutton" id="spieleOeffnen">
+                <button
+                    type="button"
+                    class="hauptbutton"
+                    id="spieleOeffnen"
+                >
                     <span class="symbol">🎯</span>
                     <span class="karten-titel">Spiele</span>
                     <span class="beschreibung">Dartspiele auswählen</span>
                 </button>
 
-                <button type="button" class="hauptbutton" id="einstellungenOeffnen">
+                <button
+                    type="button"
+                    class="hauptbutton"
+                    id="einstellungenOeffnen"
+                >
                     <span class="symbol">⚙️</span>
                     <span class="karten-titel">Einstellungen</span>
                     <span class="beschreibung">App anpassen</span>
                 </button>
+            </div>
+        </section>
 
-        <!-- Spielauswahl: erst nach Klick auf Spiele sichtbar -->
         <section id="spieleAnsicht" class="spielbereich" hidden>
             <div class="seiten-kopf">
-                <button type="button" class="zurueck-button" id="spieleZurStartseite">← Startseite</button>
+                <button
+                    type="button"
+                    class="zurueck-button"
+                    id="spieleZurStartseite"
+                >
+                    ← Startseite
+                </button>
+
                 <h2>Spiele auswählen</h2>
                 <p>Wische nach unten, um weitere Spiele zu sehen.</p>
             </div>
 
             <div class="spiel-grid spiel-liste">
-                <button class="spielkarte" data-mode="x01" type="button">
+
+                <button
+                    class="spielkarte"
+                    data-mode="x01"
+                    type="button"
+                >
                     <span class="symbol">🎯</span>
                     <span class="karten-titel">501 / X01</span>
                     <span class="beschreibung">Punkte zählen und Restscore</span>
                     <span class="level-hinweis">Patreon-Level 1</span>
                 </button>
 
-                <button class="spielkarte" data-mode="tictactoe" type="button">
+                <button
+                    class="spielkarte"
+                    data-mode="tictactoe"
+                    type="button"
+                >
                     <span class="symbol">▦</span>
                     <span class="karten-titel">Dart Tic-Tac-Toe</span>
                     <span class="beschreibung">Varianten, Training und 2 Spieler</span>
                     <span class="level-hinweis">Patreon-Level 2</span>
                 </button>
 
-                <button class="spielkarte" data-mode="checkout" type="button">
+                <button
+                    class="spielkarte"
+                    data-mode="checkout"
+                    type="button"
+                >
                     <span class="symbol">➜</span>
                     <span class="karten-titel">Checkout-Training</span>
                     <span class="beschreibung">Auscheckwege üben</span>
                     <span class="level-hinweis">Patreon-Level 3</span>
                 </button>
 
-                <button class="spielkarte" data-mode="stats" type="button">
+                <button
+                    class="spielkarte"
+                    data-mode="stats"
+                    type="button"
+                >
                     <span class="symbol">▥</span>
                     <span class="karten-titel">Statistiken</span>
                     <span class="beschreibung">Deine Fortschritte ansehen</span>
                     <span class="level-hinweis">Patreon-Level 3</span>
                 </button>
+
             </div>
         </section>
 
-        <!-- Einstellungen als eigener Bereich; weitere Optionen können hier ergänzt werden -->
         <section id="einstellungenAnsicht" class="info-karte" hidden>
-            <button type="button" class="zurueck-button" id="einstellungenZurStartseite">← Startseite</button>
+
+            <button
+                type="button"
+                class="zurueck-button"
+                id="einstellungenZurStartseite"
+            >
+                ← Startseite
+            </button>
+
             <h2>Einstellungen</h2>
-            <p>Hier kommen die Einstellungen von DartVexo hin. noch nicht funktionsfähig</p>
+
             <label for="dartvexoTheme">Darstellung</label>
             <select id="dartvexoTheme">
                 <option value="dark">Dunkel (Standard)</option>
                 <option value="light">Hell</option>
             </select>
-            
-<div class="patreon-einstellungen">
-    <h3>🎯 Patreon-Mitgliedschaft</h3>
 
-    <p id="patreonStatus">
-        Noch kein Patreon-Konto verbunden.
-    </p>
+            <div class="patreon-einstellungen">
+                <h3>🎯 Patreon-Mitgliedschaft</h3>
 
-    <a
-        id="patreonVerbinden"
-        class="menue-punkt menue-link"
-        href="https://dartvexo.niclasbehrens6.workers.dev/auth/patreon/login"
-    >
-        Mit Patreon verbinden
-    </a>
+                <p id="patreonStatus">
+                    Noch kein Patreon-Konto verbunden.
+                </p>
 
-    <button
-        type="button"
-        id="patreonAbmelden"
-        hidden
-    >
-        Patreon-Konto trennen
-    </button>
-</div>
+                <a
+                    id="patreonVerbinden"
+                    class="menue-punkt menue-link"
+                    href="https://dartvexo.niclasbehrens6.workers.dev/auth/patreon/login"
+                >
+                    Mit Patreon verbinden
+                </a>
+
+                <button
+                    type="button"
+                    id="patreonAbmelden"
+                    hidden
+                >
+                    Patreon-Konto trennen
+                </button>
+            </div>
+
+            <div class="club-einstellungen">
+                <h3>🔑 Zugangscode</h3>
+
+                <p>
+                    Aktiviere hier deinen Vereins- oder Admin-Zugang.
+                </p>
+
+                <div id="clubAktivierung">
+                    <label for="clubCode">Zugangscode</label>
+
+                    <input
+                        type="password"
+                        id="clubCode"
+                        autocomplete="off"
+                        placeholder="Zugangscode eingeben"
+                    >
+
+                    <label for="clubDeviceName">
+                        Gerätename (optional)
+                    </label>
+
+                    <input
+                        type="text"
+                        id="clubDeviceName"
+                        placeholder="z. B. Vereins-Tablet"
+                    >
+
+                    <button
+                        type="button"
+                        id="clubAktivieren"
+                    >
+                        Zugang aktivieren
+                    </button>
+                </div>
+
+                <p id="clubStatus" aria-live="polite">
+                    Noch kein Zugang aktiviert.
+                </p>
+
+                <button
+                    type="button"
+                    id="clubAbmelden"
+                    hidden
+                >
+                    Zugang deaktivieren
+                </button>
+            </div>
 
         </section>
 
-<section id="tictactoeBereich" class="info-karte spielbereich-neu" hidden>
-    <h2>Dart Tic-Tac-Toe</h2>
-    <p>Wähle einen Modus und starte deine Runde.</p>
+        <section
+            id="tictactoeBereich"
+            class="info-karte spielbereich-neu"
+            hidden
+        >
+            <h2>Dart Tic-Tac-Toe</h2>
+            <p>Wähle einen Modus und starte deine Runde.</p>
 
-    <label for="spielmodus">Spielmodus</label>
-    <select id="spielmodus">
-        <option value="two">Zwei Spieler</option>
-        <option value="training">Training allein</option>
-        <option value="bot">Gegen Bot</option>
-    </select>
+            <label for="spielmodus">Spielmodus</label>
+            <select id="spielmodus">
+                <option value="two">Zwei Spieler</option>
+                <option value="training">Training allein</option>
+                <option value="bot">Gegen Bot</option>
+            </select>
 
-    <label for="variantenwahl">Dart-Variante</label>
-    <select id="variantenwahl">
-        <option value="mixed">Gemischte Aufgaben</option>
-        <option value="sequence">Zahlenfolgen</option>
-        <option value="color">Farben treffen</option>
-        <option value="63">63+ Punkte mit maximal 3 Darts</option>
-        <option value="double">Doppel D17–D20</option>
-    </select>
+            <label for="variantenwahl">Dart-Variante</label>
+            <select id="variantenwahl">
+                <option value="mixed">Gemischte Aufgaben</option>
+                <option value="sequence">Zahlenfolgen</option>
+                <option value="color">Farben treffen</option>
+                <option value="63">63+ Punkte mit maximal 3 Darts</option>
+                <option value="double">Doppel D17–D20</option>
+            </select>
 
-    <div class="spiel-kopf">
-        <strong id="spielerAnzeige">Am Zug: Spieler X</strong>
-        <button id="neustart" type="button">Neue Runde</button>
-    </div>
+            <div class="spiel-kopf">
+                <strong id="spielerAnzeige">Am Zug: Spieler X</strong>
+                <button id="neustart" type="button">Neue Runde</button>
+            </div>
 
-    <div id="ticTacToeFeld" class="tic-tac-toe-feld"></div>
+            <div id="ticTacToeFeld" class="tic-tac-toe-feld"></div>
 
-    <p id="spielMeldung" aria-live="polite">
-        Wähle ein Feld, um eine Aufgabe zu beginnen.
-    </p>
+            <p id="spielMeldung" aria-live="polite">
+                Wähle ein Feld, um eine Aufgabe zu beginnen.
+            </p>
 
-    <button id="zurueckStart" type="button" class="zurueck-button">
-        ← Zur Spielauswahl
-    </button>
-</section>
-
-
-
-<section id="x01Bereich" class="info-karte spielbereich-neu" hidden>
-    <h2>501 / X01</h2>
-    <p>Spiele ein vollständiges Dart-Leg mit automatischer Punkteberechnung.</p>
-
-    <div class="x01-einstellungen">
-        <label for="x01Startscore">Startpunktzahl</label>
-        <select id="x01Startscore">
-            <option value="501">501 Punkte</option>
-            <option value="301">301 Punkte</option>
-            <option value="701">701 Punkte</option>
-            <option value="custom">Eigene Startpunktzahl</option>
-        </select>
-
-        <div id="x01EigeneStartzahlBereich" hidden>
-            <label for="x01EigeneStartzahl">Eigene Punktzahl</label>
-            <input
-                type="number"
-                id="x01EigeneStartzahl"
-                min="2"
-                max="10000"
-                step="1"
-                value="501"
+            <button
+                id="zurueckStart"
+                type="button"
+                class="zurueck-button"
             >
-        </div>
+                ← Zur Spielauswahl
+            </button>
+        </section>
 
-        <label for="x01Spielmodus">Spielmodus</label>
-        <select id="x01Spielmodus">
-            <option value="two">Zwei Spieler</option>
-            <option value="training">Training allein</option>
-            <option value="bot">Gegen den Bot</option>
-        </select>
+        <section
+            id="x01Bereich"
+            class="info-karte spielbereich-neu"
+            hidden
+        >
+            <h2>501 / X01</h2>
+            <p>Spiele ein vollständiges Dart-Leg mit automatischer Punkteberechnung.</p>
 
-        <label for="x01BotSchwierigkeit">Bot-Schwierigkeit</label>
-        <select id="x01BotSchwierigkeit">
-            <option value="leicht">Leicht</option>
-            <option value="mittel" selected>Mittel</option>
-            <option value="schwer">Schwer</option>
-        </select>
+            <div class="x01-einstellungen">
+                <label for="x01Startscore">Startpunktzahl</label>
+                <select id="x01Startscore">
+                    <option value="501">501 Punkte</option>
+                    <option value="301">301 Punkte</option>
+                    <option value="701">701 Punkte</option>
+                    <option value="custom">Eigene Startpunktzahl</option>
+                </select>
 
-        <label for="x01DoubleOut">Spielende</label>
-        <select id="x01DoubleOut">
-            <option value="an" selected>Double-Out</option>
-            <option value="aus">Straight-Out</option>
-        </select>
-    </div>
+                <div id="x01EigeneStartzahlBereich" hidden>
+                    <label for="x01EigeneStartzahl">Eigene Punktzahl</label>
+                    <input
+                        type="number"
+                        id="x01EigeneStartzahl"
+                        min="2"
+                        max="10000"
+                        step="1"
+                        value="501"
+                    >
+                </div>
 
-    <div class="spiel-kopf">
-        <strong id="x01SpielerAnzeige">Am Zug: Spieler 1</strong>
-        <button id="x01Neustart" type="button">Neues Leg</button>
-    </div>
+                <label for="x01Spielmodus">Spielmodus</label>
+                <select id="x01Spielmodus">
+                    <option value="two">Zwei Spieler</option>
+                    <option value="training">Training allein</option>
+                    <option value="bot">Gegen den Bot</option>
+                </select>
 
-    <div class="x01-punktestand">
-        <div id="x01SpielerX">
-            <span>Spieler 1</span>
-            <strong id="x01PunkteX">501</strong>
-            <small id="x01AufnahmenX">Aufnahmen: 0</small>
-        </div>
+                <label for="x01BotSchwierigkeit">Bot-Schwierigkeit</label>
+                <select id="x01BotSchwierigkeit">
+                    <option value="leicht">Leicht</option>
+                    <option value="mittel" selected>Mittel</option>
+                    <option value="schwer">Schwer</option>
+                </select>
 
-        <div id="x01SpielerO">
-            <span id="x01NameO">Spieler 2</span>
-            <strong id="x01PunkteO">501</strong>
-            <small id="x01AufnahmenO">Aufnahmen: 0</small>
-        </div>
-    </div>
+                <label for="x01DoubleOut">Spielende</label>
+                <select id="x01DoubleOut">
+                    <option value="an" selected>Double-Out</option>
+                    <option value="aus">Straight-Out</option>
+                </select>
+            </div>
 
-    <p id="x01Aufnahme">Dart 1 von 3</p>
-    <p id="x01Darts">Noch keine Darts geworfen.</p>
+            <div class="spiel-kopf">
+                <strong id="x01SpielerAnzeige">Am Zug: Spieler 1</strong>
+                <button id="x01Neustart" type="button">Neues Leg</button>
+            </div>
 
-    <h3>Treffer eingeben</h3>
+            <div class="x01-punktestand">
+                <div id="x01SpielerX">
+                    <span>Spieler 1</span>
+                    <strong id="x01PunkteX">501</strong>
+                    <small id="x01AufnahmenX">Aufnahmen: 0</small>
+                </div>
 
-    <label for="x01Ring">Trefferart</label>
-    <select id="x01Ring">
-        <option value="S">Single</option>
-        <option value="D">Double</option>
-        <option value="T">Triple</option>
-    </select>
+                <div id="x01SpielerO">
+                    <span id="x01NameO">Spieler 2</span>
+                    <strong id="x01PunkteO">501</strong>
+                    <small id="x01AufnahmenO">Aufnahmen: 0</small>
+                </div>
+            </div>
 
-    <label for="x01Zahl">Zahl</label>
-    <select id="x01Zahl">
-        <option value="20">20</option>
-        <option value="19">19</option>
-        <option value="18">18</option>
-        <option value="17">17</option>
-        <option value="16">16</option>
-        <option value="15">15</option>
-        <option value="14">14</option>
-        <option value="13">13</option>
-        <option value="12">12</option>
-        <option value="11">11</option>
-        <option value="10">10</option>
-        <option value="9">9</option>
-        <option value="8">8</option>
-        <option value="7">7</option>
-        <option value="6">6</option>
-        <option value="5">5</option>
-        <option value="4">4</option>
-        <option value="3">3</option>
-        <option value="2">2</option>
-        <option value="1">1</option>
-    </select>
+            <p id="x01Aufnahme">Dart 1 von 3</p>
+            <p id="x01Darts">Noch keine Darts geworfen.</p>
 
-    <div class="x01-treffer-buttons">
-        <button id="x01Bull" type="button">Bull 25</button>
-        <button id="x01Bullseye" type="button">Bullseye 50</button>
-        <button id="x01Miss" type="button">Daneben (0)</button>
-        <button id="x01Eintragen" type="button">Treffer eintragen</button>
-    </div>
+            <h3>Treffer eingeben</h3>
 
-    <p id="x01Meldung" aria-live="polite">
-        Gib deinen ersten Dart ein.
-    </p>
+            <label for="x01Ring">Trefferart</label>
+            <select id="x01Ring">
+                <option value="S">Single</option>
+                <option value="D">Double</option>
+                <option value="T">Triple</option>
+            </select>
 
-    <button id="x01Zurueck" type="button" class="zurueck-button">
-        ← Zur Spielauswahl
-    </button>
-</section>
+            <label for="x01Zahl">Zahl</label>
+            <select id="x01Zahl">
+                <option value="20">20</option>
+                <option value="19">19</option>
+                <option value="18">18</option>
+                <option value="17">17</option>
+                <option value="16">16</option>
+                <option value="15">15</option>
+                <option value="14">14</option>
+                <option value="13">13</option>
+                <option value="12">12</option>
+                <option value="11">11</option>
+                <option value="10">10</option>
+                <option value="9">9</option>
+                <option value="8">8</option>
+                <option value="7">7</option>
+                <option value="6">6</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+            </select>
 
+            <div class="x01-treffer-buttons">
+                <button id="x01Bull" type="button">Bull 25</button>
+                <button id="x01Bullseye" type="button">Bullseye 50</button>
+                <button id="x01Miss" type="button">Daneben (0)</button>
+                <button id="x01Eintragen" type="button">Treffer eintragen</button>
+            </div>
 
-<section id="checkoutBereich" class="info-karte spielbereich-neu" hidden>
-    <h2>Checkout-Training</h2>
-    <p>Trainiere allein deine Auscheckwege – ohne Bot und ohne zweiten Spieler.</p>
+            <p id="x01Meldung" aria-live="polite">
+                Gib deinen ersten Dart ein.
+            </p>
 
-    <label for="checkoutOutModus">Checkout-Regel</label>
-    <select id="checkoutOutModus">
-        <option value="double">Double-Out</option>
-        <option value="single">Single-Out</option>
-    </select>
+            <button
+                id="x01Zurueck"
+                type="button"
+                class="zurueck-button"
+            >
+                ← Zur Spielauswahl
+            </button>
+        </section>
 
-    <div class="checkout-stand">
-        <p>Dein Restscore</p>
-        <strong id="checkoutRest">40</strong>
-        <p id="checkoutAufgabe">Aufgabe 1</p>
-    </div>
+        <section
+            id="checkoutBereich"
+            class="info-karte spielbereich-neu"
+            hidden
+        >
+            <h2>Checkout-Training</h2>
+            <p>Trainiere allein deine Auscheckwege – ohne Bot und ohne zweiten Spieler.</p>
 
-    <label for="checkoutRing">Trefferart</label>
-    <select id="checkoutRing">
-        <option value="S">Single</option>
-        <option value="D">Double</option>
-        <option value="T">Triple</option>
-    </select>
+            <label for="checkoutOutModus">Checkout-Regel</label>
+            <select id="checkoutOutModus">
+                <option value="double">Double-Out</option>
+                <option value="single">Single-Out</option>
+            </select>
 
-    <label for="checkoutZahl">Zahl</label>
-    <select id="checkoutZahl">
-        <option value="20">20</option>
-        <option value="19">19</option>
-        <option value="18">18</option>
-        <option value="17">17</option>
-        <option value="16">16</option>
-        <option value="15">15</option>
-        <option value="14">14</option>
-        <option value="13">13</option>
-        <option value="12">12</option>
-        <option value="11">11</option>
-        <option value="10">10</option>
-        <option value="9">9</option>
-        <option value="8">8</option>
-        <option value="7">7</option>
-        <option value="6">6</option>
-        <option value="5">5</option>
-        <option value="4">4</option>
-        <option value="3">3</option>
-        <option value="2">2</option>
-        <option value="1">1</option>
-    </select>
+            <div class="checkout-stand">
+                <p>Dein Restscore</p>
+                <strong id="checkoutRest">40</strong>
+                <p id="checkoutAufgabe">Aufgabe 1</p>
+            </div>
 
-    <div class="checkout-buttons">
-        <button id="checkoutBull" type="button">Bull 25</button>
-        <button id="checkoutBullseye" type="button">Bullseye 50</button>
-        <button id="checkoutMiss" type="button">Daneben (0)</button>
-        <button id="checkoutEintragen" type="button">Treffer eintragen</button>
-    </div>
+            <label for="checkoutRing">Trefferart</label>
+            <select id="checkoutRing">
+                <option value="S">Single</option>
+                <option value="D">Double</option>
+                <option value="T">Triple</option>
+            </select>
 
-    <p id="checkoutDarts">Noch keine Darts geworfen.</p>
-    <p id="checkoutMeldung" aria-live="polite">Finde deinen Checkout!</p>
+            <label for="checkoutZahl">Zahl</label>
+            <select id="checkoutZahl">
+                <option value="20">20</option>
+                <option value="19">19</option>
+                <option value="18">18</option>
+                <option value="17">17</option>
+                <option value="16">16</option>
+                <option value="15">15</option>
+                <option value="14">14</option>
+                <option value="13">13</option>
+                <option value="12">12</option>
+                <option value="11">11</option>
+                <option value="10">10</option>
+                <option value="9">9</option>
+                <option value="8">8</option>
+                <option value="7">7</option>
+                <option value="6">6</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+            </select>
 
-    <button id="checkoutHinweis" type="button">Checkout-Weg anzeigen</button>
-    <p id="checkoutWeg" hidden></p>
+            <div class="checkout-buttons">
+                <button id="checkoutBull" type="button">Bull 25</button>
+                <button id="checkoutBullseye" type="button">Bullseye 50</button>
+                <button id="checkoutMiss" type="button">Daneben (0)</button>
+                <button id="checkoutEintragen" type="button">Treffer eintragen</button>
+            </div>
 
-    <button id="checkoutNeu" type="button">Neue Aufgabe</button>
-    <button id="checkoutZurueck" type="button" class="zurueck-button">← Zur Spielauswahl</button>
-</section>
+            <p id="checkoutDarts">Noch keine Darts geworfen.</p>
+            <p id="checkoutMeldung" aria-live="polite">Finde deinen Checkout!</p>
 
+            <button id="checkoutHinweis" type="button">
+                Checkout-Weg anzeigen
+            </button>
 
-<section id="statsBereich" class="info-karte spielbereich-neu" hidden>
-    <h2>Deine Statistiken</h2>
-    <p>Hier siehst du deine bisherigen Fortschritte bei Dartvexo(Bald funktionsfähig).</p>
+            <p id="checkoutWeg" hidden></p>
 
-    <div class="stats-grid">
-        <div class="stats-karte">
-            <span>Gespielte X01-Legs</span>
-            <strong id="statsX01Legs">0</strong>
-        </div>
+            <button id="checkoutNeu" type="button">Neue Aufgabe</button>
 
-        <div class="stats-karte">
-            <span>X01-Siege</span>
-            <strong id="statsX01Siege">0</strong>
-        </div>
+            <button
+                id="checkoutZurueck"
+                type="button"
+                class="zurueck-button"
+            >
+                ← Zur Spielauswahl
+            </button>
+        </section>
 
-        <div class="stats-karte">
-            <span>Checkout-Aufgaben</span>
-            <strong id="statsCheckoutAufgaben">0</strong>
-        </div>
+        <section
+            id="statsBereich"
+            class="info-karte spielbereich-neu"
+            hidden
+        >
+            <h2>Deine Statistiken</h2>
+            <p>Hier siehst du deine bisherigen Fortschritte bei DartVexo.</p>
 
-        <div class="stats-karte">
-            <span>Erfolgreiche Checkouts</span>
-            <strong id="statsCheckoutErfolge">0</strong>
-        </div>
+            <div class="stats-grid">
+                <div class="stats-karte">
+                    <span>Gespielte X01-Legs</span>
+                    <strong id="statsX01Legs">0</strong>
+                </div>
 
-        <div class="stats-karte">
-            <span>Höchste Aufnahme</span>
-            <strong id="statsHoechsteAufnahme">0</strong>
-        </div>
+                <div class="stats-karte">
+                    <span>X01-Siege</span>
+                    <strong id="statsX01Siege">0</strong>
+                </div>
 
-        <div class="stats-karte">
-            <span>Checkout-Quote</span>
-            <strong id="statsCheckoutQuote">0 %</strong>
-        </div>
-    </div>
+                <div class="stats-karte">
+                    <span>Checkout-Aufgaben</span>
+                    <strong id="statsCheckoutAufgaben">0</strong>
+                </div>
 
-    <button id="statsZurueck" type="button" class="zurueck-button">
-        ← Zur Spielauswahl
-    </button>
-</section>
+                <div class="stats-karte">
+                    <span>Erfolgreiche Checkouts</span>
+                    <strong id="statsCheckoutErfolge">0</strong>
+                </div>
 
+                <div class="stats-karte">
+                    <span>Höchste Aufnahme</span>
+                    <strong id="statsHoechsteAufnahme">0</strong>
+                </div>
+
+                <div class="stats-karte">
+                    <span>Checkout-Quote</span>
+                    <strong id="statsCheckoutQuote">0 %</strong>
+                </div>
+            </div>
+
+            <button
+                id="statsZurueck"
+                type="button"
+                class="zurueck-button"
+            >
+                ← Zur Spielauswahl
+            </button>
+        </section>
 
         <section class="info-karte">
             <h2 id="infoTitel">Deine Dart-Zentrale</h2>
 
-<p id="infoText">
-    Wähle einen Spielmodus aus, um mehr darüber zu erfahren.<br>
-    Wenn du Wünsche oder Fragen hast, kontaktiere mich per E-Mail:
-    <a href="mailto:dartvexo@gmail.com">dartvexo@gmail.com</a>
-    <br>
-    Tritt auch meinem Discord-Server bei:
-    <a href="https://discord.gg/ftp7Gpz9Cg" target="_blank" rel="noopener noreferrer">
-        DartVexo Discord
-    </a>
-</p>
+            <p id="infoText">
+                Wähle einen Spielmodus aus, um mehr darüber zu erfahren.
 
+                <br>
+
+                Wenn du Wünsche oder Fragen hast, kontaktiere mich per E-Mail:
+                <a href="mailto:dartvexo@gmail.com">dartvexo@gmail.com</a>
+
+                <br>
+
+                Tritt auch meinem Discord-Server bei:
+                <a
+                    href="https://discord.gg/ftp7Gpz9Cg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    DartVexo Discord
+                </a>
+            </p>
         </section>
 
         <footer>
-               <a href="datenschutz.html">Datenschutz</a>
+            <a href="datenschutz.html">Datenschutz</a>
             <span>·</span>
             <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a>
         </footer>
+
     </main>
 
     <script src="script.js"></script>
-    
-<script>
-/* ==========================================
-   DARTVEXO – VEREINSZUGANG
-   ========================================== */
-const CLUB_API = "https://dartvexo.niclasbehrens6.workers.dev";
-const CLUB_SESSION_KEY = "dartvexo_club_session";
 
-const clubCode = document.getElementById("clubCode");
-const clubDeviceName = document.getElementById("clubDeviceName");
-const clubAktivieren = document.getElementById("clubAktivieren");
-const clubStatus = document.getElementById("clubStatus");
-const clubAbmelden = document.getElementById("clubAbmelden");
-const clubAktivierung = document.getElementById("clubAktivierung");
-
-function clubAnzeigeAktualisieren(aktiv) {
-    if (clubAktivierung) {
-        clubAktivierung.hidden = aktiv;
-    }
-
-    if (clubAbmelden) {
-        clubAbmelden.hidden = !aktiv;
-    }
-
-    if (clubStatus) {
-        clubStatus.textContent = aktiv
-            ? "Vereinszugang ist aktiv."
-            : "Noch kein Vereinsgerät aktiviert.";
-    }
-}
-
-// Vorhandene Sitzung überprüfen
-async function clubSitzungPruefen() {
-    const token = localStorage.getItem(CLUB_SESSION_KEY);
-
-    if (!token) {
-        clubAnzeigeAktualisieren(false);
-        return;
-    }
-
-    try {
-        const antwort = await fetch(
-            CLUB_API + "/api/auth/status",
-            {
-                headers: {
-                    "Authorization": "Bearer " + token
-                }
-            }
-        );
-
-        const daten = await antwort.json();
-
-        if (daten.authenticated && daten.hasAccess) {
-            clubAnzeigeAktualisieren(true);
-        } else {
-            localStorage.removeItem(CLUB_SESSION_KEY);
-            clubAnzeigeAktualisieren(false);
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("./service-worker.js")
+                    .then(() => console.log("DartVexo: Offline-Unterstützung aktiviert."))
+                    .catch((error) => {
+                        console.error("Service Worker konnte nicht registriert werden:", error);
+                    });
+            });
         }
-    } catch (fehler) {
-        clubStatus.textContent =
-            "Verbindung zum Server fehlgeschlagen.";
-    }
-}
+    </script>
 
-// Vereinsgerät aktivieren
-if (clubAktivieren) {
-    clubAktivieren.addEventListener("click", async function () {
-        const code = clubCode.value.trim();
-        const deviceName =
-            clubDeviceName.value.trim() || "Vereinsgerät";
+    <script>
+        const dartvexoSaetze = [
+            "Schön, dass du wieder da bist!",
+            "Bereit für die nächste Runde?",
+            "Heute wird ein guter Dart-Tag!",
+            "Deine nächste Bestleistung wartet!",
+            "Lust auf ein paar gute Darts?",
+            "Willkommen zurück an der Oche!",
+            "Ein neuer Tag, neue Treffer!",
+            "Dein Dart-Abenteuer geht weiter!",
+            "Zeit für eine Runde Dart!",
+            "Auf geht's zur nächsten Aufnahme!",
+            "Heute zählt jeder Dart!",
+            "Mach dich bereit und leg los!",
+            "Die Darts warten schon auf dich!",
+            "Dein nächstes Spiel beginnt hier!",
+            "Zeig, was in dir steckt!",
+            "Treffer für Treffer zum Ziel!",
+            "DartVexo ist bereit!",
+            "Ein paar Darts gehen immer!",
+            "Zeit, deine Treffsicherheit zu testen!",
+            "Heute steht Dart auf dem Programm!",
+            "Deine Dart-Zentrale ist geöffnet!",
+            "Willkommen in deiner Dart-Welt!",
+            "Bereit für spannende Spiele?",
+            "Die nächste Runde gehört dir!",
+            "Hol dir den nächsten Volltreffer!",
+            "Lass die Darts fliegen!",
+            "Dein Training kann beginnen!",
+            "Heute ist dein Dart-Moment!",
+            "Auf zur nächsten Herausforderung!",
+            "Drei Darts, viele Möglichkeiten!",
+            "Dein Spiel, deine Regeln!",
+            "Es ist Zeit für DartVexo!",
+            "Schön, dich hier zu sehen!",
+            "Bereit für eine neue Herausforderung?",
+            "Mach heute ein paar Punkte!",
+            "Deine Darts warten auf ihren Einsatz!",
+            "Willkommen in deinem Spielbereich!",
+            "Ein Klick und das Spiel beginnt!",
+            "Heute kannst du alles treffen!",
+            "Dein nächster Checkout wartet!",
+            "Dart macht den Tag besser!",
+            "Bereit für eine starke Aufnahme?",
+            "Hier beginnt dein Dart-Training!",
+            "Deine persönliche Dart-Arena wartet!",
+            "Zeit für Präzision und Spaß!",
+            "Ein neues Spiel wartet auf dich!",
+            "DartVexo bringt dich ans Ziel!",
+            "Heute wird ordentlich gezählt!",
+            "Willkommen bei deiner Dart-App!",
+            "Deine nächste Runde startet jetzt!",
+            "Auf die Darts, fertig, los!",
+            "Ein bisschen Dart gefällig?",
+            "Dein Weg zum perfekten Wurf!",
+            "Bereit für den nächsten Punkt?",
+            "Hier dreht sich alles um Dart!",
+            "Deine Spielecke ist bereit!",
+            "Heute ist Trefferzeit!",
+            "Lass uns eine Runde spielen!",
+            "Dein Dart-Abend beginnt hier!",
+            "Auf geht's, Dartspieler!",
+            "Die Oche ruft!",
+            "Ein neuer Versuch, ein neuer Treffer!",
+            "DartVexo wartet auf dich!",
+            "Zeit für deine Lieblingsspiele!",
+            "Bereit, die Punkte zu jagen!",
+            "Dein nächster Wurf zählt!",
+            "Willkommen zum Dart-Training!",
+            "Heute wird das Board erobert!",
+            "Mach dich bereit für den Checkout!",
+            "Deine Dart-Runde kann starten!",
+            "Einfach öffnen und losspielen!",
+            "DartVexo – dein Spiel beginnt!",
+            "Schön, dass du DartVexo nutzt!",
+            "Bereit für einen treffsicheren Tag!",
+            "Viel Spaß bei deiner nächsten Runde!"
+        ];
 
-        if (!code) {
-            clubStatus.textContent =
-                "Bitte gib den Aktivierungscode ein.";
-            return;
+        const dartvexoWoerter = [
+            "Treffer", "Dart", "Oche", "Bullseye", "Checkout",
+            "Präzision", "Training", "Spiel", "Punkte", "Dreifach",
+            "Doppel", "Volltreffer", "Aufnahme", "Bestleistung",
+            "Herausforderung", "Ziel", "Dartboard", "Darts",
+            "Spielspaß", "Treffsicherheit", "Leg", "Match",
+            "Konzentration", "Erfolg", "Wurf", "Score",
+            "Bull", "Finisher", "Dartzeit", "Runde",
+            "Meisterwurf", "DartArena", "Fokus", "Power",
+            "Dartgefühl", "Spielmodus", "Punktestand",
+            "Dartmoment", "Zielgenauigkeit", "Siegerwurf",
+            "Dartfreude", "Dartprofi", "Spielstart",
+            "Dartchallenge", "Darttraining", "Dartmeister",
+            "DartVexo", "DartAction", "DartSpirit", "DartLegende"
+        ];
+
+        function dartvexoZufall(array) {
+            return array[Math.floor(Math.random() * array.length)];
         }
 
-        clubAktivieren.disabled = true;
-        clubStatus.textContent =
-            "Aktivierung wird überprüft ...";
+        function dartvexoTexteLaden() {
+            const begruessung = document.getElementById("dartvexoBegruessung");
+            const frage = document.getElementById("dartvexoFrage");
 
-        try {
-            const antwort = await fetch(
-                CLUB_API + "/api/club/activate",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        code: code,
-                        deviceName: deviceName
-                    })
-                }
-            );
-
-            const daten = await antwort.json();
-
-            if (!antwort.ok || !daten.success) {
-                clubStatus.textContent =
-                    daten.error === "INVALID_CLUB_CODE"
-                        ? "Der Aktivierungscode ist falsch."
-                        : "Aktivierung fehlgeschlagen.";
+            if (!begruessung || !frage) {
                 return;
             }
 
-            localStorage.setItem(
-                CLUB_SESSION_KEY,
-                daten.sessionToken
-            );
+            const wortModus = Math.random() < 0.5;
 
-            clubCode.value = "";
-            clubAnzeigeAktualisieren(true);
+            if (wortModus) {
+                begruessung.textContent =
+                    "Willkommen bei DartVexo – " +
+                    dartvexoZufall(dartvexoWoerter) + "!";
 
-        } catch (fehler) {
-            clubStatus.textContent =
-                "Server nicht erreichbar. Bitte erneut versuchen.";
-        } finally {
-            clubAktivieren.disabled = false;
-        }
-    });
-}
+                frage.textContent =
+                    dartvexoZufall(dartvexoWoerter) + " gefällig?";
+            } else {
+                const ersterSatz = dartvexoZufall(dartvexoSaetze);
+                let zweiterSatz = dartvexoZufall(dartvexoSaetze);
 
-// Vereinsgerät abmelden
-if (clubAbmelden) {
-    clubAbmelden.addEventListener("click", async function () {
-        const token = localStorage.getItem(CLUB_SESSION_KEY);
-
-        try {
-            if (token) {
-                await fetch(
-                    CLUB_API + "/api/auth/logout",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Authorization": "Bearer " + token
-                        }
-                    }
-                );
-            }
-        } catch (fehler) {
-            console.warn("Abmeldung beim Server fehlgeschlagen.");
-        }
-
-        localStorage.removeItem(CLUB_SESSION_KEY);
-        clubAnzeigeAktualisieren(false);
-    });
-}
-
-// Beim Öffnen der App automatisch prüfen
-clubSitzungPruefen();
-</script>
-
-<script>
-/* ==========================================
-   DARTVEXO – PATREON-VERBINDUNG
-   ========================================== */
-
-const PATREON_API =
-    "https://dartvexo.niclasbehrens6.workers.dev";
-
-const PATREON_SESSION_KEY =
-    "dartvexo_patreon_session";
-
-const patreonStatus =
-    document.getElementById("patreonStatus");
-
-const patreonVerbinden =
-    document.getElementById("patreonVerbinden");
-
-const patreonAbmelden =
-    document.getElementById("patreonAbmelden");
-
-
-function patreonAnzeigeAktualisieren(
-    verbunden,
-    name = "",
-    hasAccess = false
-) {
-    if (patreonStatus) {
-        if (!verbunden) {
-            patreonStatus.textContent =
-                "Noch kein Patreon-Konto verbunden.";
-        } else if (hasAccess) {
-            patreonStatus.textContent =
-                "Patreon verbunden: " + name +
-                " – Mitgliedschaft aktiv.";
-        } else {
-            patreonStatus.textContent =
-                "Patreon verbunden: " + name +
-                " – aktuell keine aktive Mitgliedschaft.";
-        }
-    }
-
-    if (patreonAbmelden) {
-        patreonAbmelden.hidden = !verbunden;
-    }
-
-    if (patreonVerbinden) {
-        patreonVerbinden.textContent = verbunden
-            ? "Patreon-Verbindung erneuern"
-            : "Mit Patreon verbinden";
-    }
-}
-
-
-// Patreon-Rücksprung-Code gegen Sitzung tauschen
-async function patreonRuecksprungVerarbeiten() {
-    const url = new URL(window.location.href);
-
-    const code = url.searchParams.get("patreon_code");
-    const error = url.searchParams.get("patreon_error");
-
-    if (error) {
-        if (patreonStatus) {
-            patreonStatus.textContent =
-                "Patreon-Verbindung fehlgeschlagen: " + error;
-        }
-
-        url.searchParams.delete("patreon_error");
-
-        history.replaceState(
-            {},
-            document.title,
-            url.pathname + url.search + url.hash
-        );
-
-        return;
-    }
-
-    if (!code) {
-        return;
-    }
-
-    if (patreonStatus) {
-        patreonStatus.textContent =
-            "Patreon-Verbindung wird abgeschlossen ...";
-    }
-
-    try {
-        const antwort = await fetch(
-            PATREON_API + "/api/auth/redeem",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    code: code
-                })
-            }
-        );
-
-        const daten = await antwort.json();
-
-        if (!antwort.ok || !daten.success) {
-            throw new Error(
-                daten.error || "CODE_INVALID"
-            );
-        }
-
-        localStorage.setItem(
-            PATREON_SESSION_KEY,
-            daten.sessionToken
-        );
-
-        url.searchParams.delete("patreon_code");
-
-        history.replaceState(
-            {},
-            document.title,
-            url.pathname + url.search + url.hash
-        );
-
-        await patreonSitzungPruefen();
-
-    } catch (fehler) {
-        console.error(
-            "Patreon-Verbindung fehlgeschlagen:",
-            fehler
-        );
-
-        if (patreonStatus) {
-            patreonStatus.textContent =
-                "Patreon-Verbindung konnte nicht abgeschlossen werden.";
-        }
-    }
-}
-
-
-// Gespeicherte Patreon-Sitzung überprüfen
-async function patreonSitzungPruefen() {
-    const token = localStorage.getItem(
-        PATREON_SESSION_KEY
-    );
-
-    if (!token) {
-        patreonAnzeigeAktualisieren(false);
-        return;
-    }
-
-    try {
-        const antwort = await fetch(
-            PATREON_API + "/api/auth/status",
-            {
-                headers: {
-                    "Authorization": "Bearer " + token
+                while (zweiterSatz === ersterSatz) {
+                    zweiterSatz = dartvexoZufall(dartvexoSaetze);
                 }
+
+                begruessung.textContent = ersterSatz;
+                frage.textContent = zweiterSatz;
             }
-        );
-
-        const daten = await antwort.json();
-
-        if (daten.authenticated) {
-            patreonAnzeigeAktualisieren(
-                true,
-                daten.user?.name || "Patreon-Nutzer",
-                daten.hasAccess === true
-            );
-        } else {
-            localStorage.removeItem(
-                PATREON_SESSION_KEY
-            );
-
-            patreonAnzeigeAktualisieren(false);
         }
 
-    } catch (fehler) {
-        console.error(
-            "Patreon-Status konnte nicht geprüft werden:",
-            fehler
-        );
-
-        if (patreonStatus) {
-            patreonStatus.textContent =
-                "Verbindung zum Patreon-Server fehlgeschlagen.";
-        }
-    }
-}
-
-
-// Patreon-Konto trennen
-if (patreonAbmelden) {
-    patreonAbmelden.addEventListener(
-        "click",
-        async function () {
-            const token = localStorage.getItem(
-                PATREON_SESSION_KEY
-            );
-
-            try {
-                if (token) {
-                    await fetch(
-                        PATREON_API + "/api/auth/logout",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Authorization": "Bearer " + token
-                            }
-                        }
-                    );
-                }
-            } catch (fehler) {
-                console.warn(
-                    "Patreon-Abmeldung beim Server fehlgeschlagen."
-                );
-            }
-
-            localStorage.removeItem(
-                PATREON_SESSION_KEY
-            );
-
-            patreonAnzeigeAktualisieren(false);
-        }
-    );
-}
-
-
-// Beim Laden der App Verbindung prüfen
-patreonRuecksprungVerarbeiten().then(function () {
-    patreonSitzungPruefen();
-});
-</script>
-
-<script>
-/* DartVexo – Navigation für Startseite, Spiele, Einstellungen und Zugangscode */
-(function () {
-    const start = document.getElementById("startAnsicht");
-    const spiele = document.getElementById("spieleAnsicht");
-    const einstellungen = document.getElementById("einstellungenAnsicht");
-    const gameSections = [
-        document.getElementById("tictactoeBereich"),
-        document.getElementById("x01Bereich"),
-        document.getElementById("checkoutBereich"),
-        document.getElementById("statsBereich")
-    ];
-const zugang = document.getElementById("zugangscodeAnsicht");
-    
-    function alleAnsichtenSchliessen() {
-        [start, spiele, einstellungen, zugang, ...gameSections].forEach(section => {
-            if (section) section.hidden = true;
-        });
-    }
-
-    function startseiteAnzeigen() {
-        alleAnsichtenSchliessen();
-        start.hidden = false;
-    }
-
-    function spielauswahlAnzeigen() {
-        alleAnsichtenSchliessen();
-        spiele.hidden = false;
-    }
-
-    document.getElementById("spieleOeffnen").addEventListener("click", spielauswahlAnzeigen);
-    document.getElementById("einstellungenOeffnen").addEventListener("click", function () {
-        alleAnsichtenSchliessen();
-        einstellungen.hidden = false;
-    });
-
-    document.getElementById("spieleZurStartseite").addEventListener("click", startseiteAnzeigen);
-    document.getElementById("einstellungenZurStartseite").addEventListener("click", startseiteAnzeigen);
-
-    ["zurueckStart", "x01Zurueck", "checkoutZurueck", "statsZurueck"].forEach(id => {
-        const button = document.getElementById(id);
-        if (button) button.addEventListener("click", spielauswahlAnzeigen);
-    });
-
-    // Startzustand: nur die neue Startseite ist sichtbar.
-    startseiteAnzeigen();
-})();
-</script>
-
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./service-worker.js")
-        .then(() => console.log("Dartvexo: Offline-Unterstützung aktiviert."))
-        .catch((error) => {
-          console.error("Service Worker konnte nicht registriert werden:", error);
-        });
-    });
-  }
-</script>
-    
-<script>
-const dartvexoSaetze = [
-    "Schön, dass du wieder da bist!",
-    "Bereit für die nächste Runde?",
-    "Heute wird ein guter Dart-Tag!",
-    "Deine nächste Bestleistung wartet!",
-    "Lust auf ein paar gute Darts?",
-    "Willkommen zurück an der Oche!",
-    "Ein neuer Tag, neue Treffer!",
-    "Dein Dart-Abenteuer geht weiter!",
-    "Zeit für eine Runde Dart!",
-    "Auf geht's zur nächsten Aufnahme!",
-    "Heute zählt jeder Dart!",
-    "Mach dich bereit und leg los!",
-    "Die Darts warten schon auf dich!",
-    "Dein nächstes Spiel beginnt hier!",
-    "Zeig, was in dir steckt!",
-    "Treffer für Treffer zum Ziel!",
-    "DartVexo ist bereit!",
-    "Ein paar Darts gehen immer!",
-    "Zeit, deine Treffsicherheit zu testen!",
-    "Heute steht Dart auf dem Programm!",
-    "Deine Dart-Zentrale ist geöffnet!",
-    "Willkommen in deiner Dart-Welt!",
-    "Bereit für spannende Spiele?",
-    "Die nächste Runde gehört dir!",
-    "Hol dir den nächsten Volltreffer!",
-    "Lass die Darts fliegen!",
-    "Dein Training kann beginnen!",
-    "Heute ist dein Dart-Moment!",
-    "Auf zur nächsten Herausforderung!",
-    "Drei Darts, viele Möglichkeiten!",
-    "Dein Spiel, deine Regeln!",
-    "Es ist Zeit für DartVexo!",
-    "Schön, dich hier zu sehen!",
-    "Bereit für eine neue Herausforderung?",
-    "Mach heute ein paar Punkte!",
-    "Deine Darts warten auf ihren Einsatz!",
-    "Willkommen in deinem Spielbereich!",
-    "Ein Klick und das Spiel beginnt!",
-    "Heute kannst du alles treffen!",
-    "Dein nächster Checkout wartet!",
-    "Dart macht den Tag besser!",
-    "Bereit für eine starke Aufnahme?",
-    "Hier beginnt dein Dart-Training!",
-    "Deine persönliche Dart-Arena wartet!",
-    "Zeit für Präzision und Spaß!",
-    "Ein neues Spiel wartet auf dich!",
-    "DartVexo bringt dich ans Ziel!",
-    "Heute wird ordentlich gezählt!",
-    "Willkommen bei deiner Dart-App!",
-    "Deine nächste Runde startet jetzt!",
-    "Auf die Darts, fertig, los!",
-    "Ein bisschen Dart gefällig?",
-    "Dein Weg zum perfekten Wurf!",
-    "Bereit für den nächsten Punkt?",
-    "Hier dreht sich alles um Dart!",
-    "Deine Spielecke ist bereit!",
-    "Heute ist Trefferzeit!",
-    "Lass uns eine Runde spielen!",
-    "Dein Dart-Abend beginnt hier!",
-    "Auf geht's, Dartspieler!",
-    "Die Oche ruft!",
-    "Ein neuer Versuch, ein neuer Treffer!",
-    "DartVexo wartet auf dich!",
-    "Zeit für deine Lieblingsspiele!",
-    "Bereit, die Punkte zu jagen!",
-    "Dein nächster Wurf zählt!",
-    "Willkommen zum Dart-Training!",
-    "Heute wird das Board erobert!",
-    "Mach dich bereit für den Checkout!",
-    "Deine Dart-Runde kann starten!",
-    "Einfach öffnen und losspielen!",
-    "DartVexo – dein Spiel beginnt!",
-    "Schön, dass du DartVexo nutzt!",
-    "Bereit für einen treffsicheren Tag!",
-    "Viel Spaß bei deiner nächsten Runde!"
-];
-
-const dartvexoWoerter = [
-    "Treffer", "Dart", "Oche", "Bullseye", "Checkout",
-    "Präzision", "Training", "Spiel", "Punkte", "Dreifach",
-    "Doppel", "Volltreffer", "Aufnahme", "Bestleistung",
-    "Herausforderung", "Ziel", "Dartboard", "Darts",
-    "Spielspaß", "Treffsicherheit", "Leg", "Match",
-    "Konzentration", "Erfolg", "Wurf", "Score",
-    "Bull", "Finisher", "Dartzeit", "Runde",
-    "Meisterwurf", "DartArena", "Fokus", "Power",
-    "Dartgefühl", "Spielmodus", "Punktestand",
-    "Dartmoment", "Zielgenauigkeit", "Siegerwurf",
-    "Dartfreude", "Dartprofi", "Spielstart",
-    "Dartchallenge", "Darttraining", "Dartmeister",
-    "DartVexo", "DartAction", "DartSpirit", "DartLegende"
-];
-
-function dartvexoZufall(array) {
-    return array[Math.floor(Math.random() * array.length)];
-}
-
-function dartvexoTexteLaden() {
-    const begruessung = document.getElementById("dartvexoBegruessung");
-    const frage = document.getElementById("dartvexoFrage");
-
-    if (!begruessung || !frage) return;
-
-    // Zufällig zwischen Satzmodus und Wortmodus wählen
-    const wortModus = Math.random() < 0.5;
-
-    if (wortModus) {
-        begruessung.textContent =
-            "Willkommen bei DartVexo – " + dartvexoZufall(dartvexoWoerter) + "!";
-
-        frage.textContent =
-            dartvexoZufall(dartvexoWoerter) + " gefällig?";
-    } else {
-        const ersterSatz = dartvexoZufall(dartvexoSaetze);
-
-        let zweiterSatz = dartvexoZufall(dartvexoSaetze);
-
-        // Verhindert, dass beide Texte gleich sind
-        while (zweiterSatz === ersterSatz) {
-            zweiterSatz = dartvexoZufall(dartvexoSaetze);
-        }
-
-        begruessung.textContent = ersterSatz;
-        frage.textContent = zweiterSatz;
-    }
-}
-
-dartvexoTexteLaden();
-</script>
+        dartvexoTexteLaden();
+    </script>
 
 </body>
 </html>
