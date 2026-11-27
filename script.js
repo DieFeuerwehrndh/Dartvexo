@@ -1127,8 +1127,6 @@ checkoutNeueAufgabe();
 /* ==========================================
    DARTVEXO – VEREINSZUGANG
    ========================================== */
-
-const CLUB_API = "https://dartvexo.niclasbehrens6.workers.dev";
 const CLUB_SESSION_KEY = "dartvexo_club_session";
 const ACCESS_API = "https://dartvexo.niclasbehrens6.workers.dev";
 const clubCode = document.getElementById("clubCode");
@@ -1207,7 +1205,7 @@ if (clubAktivieren) {
 
         try {
             const antwort = await fetch(
-                CLUB_API + "/api/club/activate",
+                CLUB_API + "/api/access/activate",
                 {
                     method: "POST",
                     headers: {
